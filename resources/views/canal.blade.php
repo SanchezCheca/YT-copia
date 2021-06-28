@@ -11,11 +11,7 @@
     <body>
         @include('navbar')
 
-        <?php
-        if (isset($usuarioIniciado)) {
-            echo $usuarioIniciado;
-        }
-        ?>
+
 
         @include('scripts')
     </body>

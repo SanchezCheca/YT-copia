@@ -11,8 +11,31 @@
       </form>
 
         <?php
-            if (isset($logged)) {
+            if (isset($usuarioIniciado)) {
+                ?>
+                <ul class="navbar-nav mt-2 mt-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="images/defaultUserImage.png" class="perfilRedondo" alt="Perfil">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink2">
+                            <a class="dropdown-item" href="user/{{$usuarioIniciado->username}}"><i class="fas fa-video"></i> Mi canal</a>
+                            <a class="dropdown-item" href="#"><i class="fas fa-trophy"></i> Ranking</a>
 
+                            <?php
+                            if ($usuarioIniciado->rol == 1) {
+                                ?>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/crud">Zona ADMIN</a>
+                                <?php
+                            }
+                            ?>
+
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="cerrarSesion"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>
+                        </div>
+                    </li>
+                </ul>
+                <?php
             } else {
                 ?>
                 <a class="d-inline mr-2" href="/register">Crear cuenta</a>
