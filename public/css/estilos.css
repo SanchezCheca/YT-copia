@@ -1,0 +1,6 @@
+.perfilRedondo {
+    height: 2em;
+    width: 2em;
+    object-fit: cover;
+    border-radius: 50%;
+}
