@@ -21,6 +21,17 @@ class controladorPrincipal extends Controller
         Return view('inicio', $datos);
     }
 
+    public function aUpload() {
+        $usuario = $this->comprobarLogin();
+        $datos = [];
+        if ($usuario != null) {
+            $datos += [
+                'usuarioIniciado' => $usuario
+            ];
+        }
+        Return view('upload', $datos);
+    }
+
     //------------------MÉTODOS PRIVADOS
     private function comprobarLogin() {
         if (session()->has('usuarioIniciado')) {

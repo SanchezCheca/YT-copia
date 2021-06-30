@@ -15,6 +15,9 @@
         if (isset($usuarioIniciado)) {
             echo $usuarioIniciado;
         }
+        if (isset($ruta)) {
+            echo '<br>' . $ruta;
+        }
         ?>
 
         @include('scripts')
