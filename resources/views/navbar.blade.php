@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom py-0 mx-0">
-    <a class="navbar-brand" href="/"><img src="images/logo.svg" width="50px"></a>
+    <a class="navbar-brand" href="inicio"><img src="images/logo.svg" width="50px"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -14,6 +14,9 @@
             if (isset($usuarioIniciado)) {
                 ?>
                 <ul class="navbar-nav mt-2 mt-lg-0">
+                    <li class="nav-item my-auto mr-2">
+                        <a href="upload" class="my-auto text-dark"><i class="fas fa-upload"></i> Subir</a>
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="images/defaultUserImage.png" class="perfilRedondo" alt="Perfil">
                         </a>
@@ -25,7 +28,7 @@
                             if ($usuarioIniciado->rol == 1) {
                                 ?>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/crud">Zona ADMIN</a>
+                                <a class="dropdown-item" href="crud">Zona ADMIN</a>
                                 <?php
                             }
                             ?>
@@ -38,9 +41,9 @@
                 <?php
             } else {
                 ?>
-                <a class="d-inline mr-2" href="/register">Crear cuenta</a>
+                <a class="d-inline mr-2" href="register">Crear cuenta</a>
                 |
-                <a class="d-inline ml-2" href="/login">Iniciar sesión</a>
+                <a class="d-inline ml-2" href="login">Iniciar sesión</a>
 
                 <?php
             }
