@@ -22,7 +22,9 @@ Route::get('upload', [controladorPrincipal::class, 'aUpload']);
 
 //------------CONTENIDO
 Route::get('user/{username}', [contentController::class, 'verCanal']);
-Route::post('uploadFile', [contentController::class, 'upload']);
+Route::get('ajax-file-upload-progress-bar', [contentController::class, 'index']);
+Route::post('ajax-file-upload-progress-bar', [contentController::class, 'upload']);
+
 Route::get('videoExample', [contentController::class, 'videoExample']);
 
 //-------------REGISTRO Y LOGIN
