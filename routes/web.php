@@ -23,13 +23,9 @@ Route::get('upload', [controladorPrincipal::class, 'aUpload']);
 //------------CONTENIDO
 Route::get('user/{username}', [contentController::class, 'verCanal']);
 Route::post('uploadFile', [contentController::class, 'upload']);
+Route::get('videoExample', [contentController::class, 'videoExample']);
 
 //-------------REGISTRO Y LOGIN
 Route::post('register', [loginController::class, 'registrarCuenta']);
 Route::post('login', [loginController::class, 'iniciarSesion']);
 Route::get('cerrarSesion', [loginController::class, 'cerrarSesion']);
-
-//------------REPRODUCIR
-Route::get('videoExample', function() {
-    return view('videoExample');
-});

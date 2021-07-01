@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Video;
 use Facade\FlareClient\Stacktrace\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -24,6 +25,17 @@ class contentController extends Controller
             'usuarioIniciado' => $usuarioIniciado
         ];
         Return view('inicio', $datos);
+    }
+
+    public function videoExample() {
+        $usuarioIniciado = $this->comprobarLogin();
+        $videoActual = Video::where('id',2)->get();
+
+        $datos = [
+            'videoInfo' => $videoActual,
+            'usuarioIniciado' => $usuarioIniciado
+        ];
+        Return view('videoExample', $datos);
     }
 
     //------------------MÉTODOS PRIVADOS
