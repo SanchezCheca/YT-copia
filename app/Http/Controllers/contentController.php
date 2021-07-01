@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Tag;
 use App\Models\Video;
 //use Facade\FlareClient\Stacktrace\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Pawlox\VideoThumbnail\Facade\VideoThumbnail;
@@ -14,6 +16,10 @@ class contentController extends Controller
     //Devuelve la información de un canal
     public function verCanal($username) {
 
+    }
+
+    public function index() {
+        return view('upload');
     }
 
     /**
@@ -40,15 +46,30 @@ class contentController extends Controller
         $video->publicUrl = $publicPath;
         $video->thumbnailFilename = $thumbnailFilename;
         $video->creator_id = $usuarioIniciado->id;
-        $video->title = 'TÍTULO DE PRUEBA';
-        $video->description = 'Descripción de prueba';
+        $video->title = $req->get('titulo');
+        $video->description = $req->get('descripcion');
         $video->save();
 
-        //Devuelve a inicio
-        $datos = [
-            'usuarioIniciado' => $usuarioIniciado
-        ];
-        Return view('inicio', $datos);
+        //Etiquetas
+        $tags = $req->get('etiquetas');
+        $tagsSinEspacios = str_replace(' ','',$tags);
+        $tagsArray = explode(',',$tagsSinEspacios);
+        foreach ($tagsArray as $tag) {
+            $tagActual = Tag::where('name','LIKE',$tag)->first();
+            if ($tagActual == null) {
+                //La etiqueta introducida no existe en BD, se crea
+                $tagActual = Tag::create([
+                    'name' => $tag
+                ]);
+            }
+            //Se asigna la etiqueta introducida a la publicación
+            DB::table('video_tag')->insert([
+                'video_id' => $video->id,
+                'tag_id' => $tagActual->id
+            ]);
+        }
+
+        return response()->json(['success'=>$video->filename]);
     }
 
     public function videoExample() {
