@@ -9,6 +9,7 @@ Copia de YouTube. Los usuarios pueden:
 
 Tecnologías utilizadas:
 -   Laravel. No hay separación entre Front y Back end. Utilizado tanto para las vistas como para la lógica del servidor
+-   jQuery para subida asíncrona de vídeos
 -   Videojs (https://videojs.com/) para el reproductor de vídeo
 -   Fontawesome (https://fontawesome.com/) para los iconos de la página
 
