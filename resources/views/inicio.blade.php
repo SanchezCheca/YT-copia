@@ -12,6 +12,14 @@
         @include('navbar')
 
         <?php
+        if (isset($algo)) {
+            echo $algo;
+        } else {
+            echo 'No hay algo';
+        }
+
+        echo '<hr>';
+
         if (isset($usuarioIniciado)) {
             echo $usuarioIniciado;
         }
