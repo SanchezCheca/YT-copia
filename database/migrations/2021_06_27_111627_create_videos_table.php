@@ -17,6 +17,7 @@ class CreateVideosTable extends Migration
             $table->id();
             $table->string('filename');
             $table->string('publicUrl');
+            $table->string('thumbnailFilename');
             $table->unsignedBigInteger('creator_id');
             $table->string('title');
             $table->string('description');
