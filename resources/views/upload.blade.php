@@ -48,7 +48,7 @@
 
                 <!-- Entrada de archivo -->
                 <div class="custom-file my-2" id="archivo">
-                    <input type="file" class="form-control pb-5 pt-3" name="archivo" required>
+                    <input type="file" class="form-control pb-5 pt-3" name="archivo" required accept="video/*">
                 </div>
 
                 <!-- Separador -->
