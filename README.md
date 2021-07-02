@@ -7,7 +7,7 @@ Copia de YouTube. Los usuarios pueden:
 -   Suscribirse a otros canales
 -   Ver rankings con los mejores vídeos y canales
 
-Tecnologías utilizadas:
+# Tecnologías utilizadas:
 -   Laravel. No hay separación entre Front y Back end. Utilizado tanto para las vistas como para la lógica del servidor
 -   jQuery para la subida asíncrona de vídeos
 -   Videojs (https://videojs.com/) para el reproductor de vídeo
