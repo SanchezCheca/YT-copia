@@ -14,23 +14,37 @@ use Pawlox\VideoThumbnail\Facade\VideoThumbnail;
 class contentController extends Controller
 {
     //Devuelve la información de un canal
-    public function verCanal($username) {
-
+    public function verCanal($username)
+    {
     }
 
-    public function index() {
-        return view('upload');
+    /**
+     * Manda a la vista de subir vídeo
+     */
+    public function aUpload()
+    {
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado != null) {
+            $datos = [
+                'usuarioIniciado' => $usuarioIniciado
+            ];
+            return view('upload', $datos);
+        } else {
+
+            return view('upload');
+        }
     }
 
     /**
      * Sube un vídeo :)
      */
-    public function upload(Request $req) {
+    public function upload(Request $req)
+    {
         //Comprueba el usuario logueado
         $usuarioIniciado = $this->comprobarLogin();
 
         //Guarda el archivo original
-        $path = $req->file('archivo')->store('videos','s3');
+        $path = $req->file('archivo')->store('videos', 's3');
         $filename = basename($path);
 
         //Miniatura del vídeo
@@ -52,10 +66,10 @@ class contentController extends Controller
 
         //Etiquetas
         $tags = $req->get('etiquetas');
-        $tagsSinEspacios = str_replace(' ','',$tags);
-        $tagsArray = explode(',',$tagsSinEspacios);
+        $tagsSinEspacios = str_replace(' ', '', $tags);
+        $tagsArray = explode(',', $tagsSinEspacios);
         foreach ($tagsArray as $tag) {
-            $tagActual = Tag::where('name','LIKE',$tag)->first();
+            $tagActual = Tag::where('name', 'LIKE', $tag)->first();
             if ($tagActual == null) {
                 //La etiqueta introducida no existe en BD, se crea
                 $tagActual = Tag::create([
@@ -69,22 +83,43 @@ class contentController extends Controller
             ]);
         }
 
-        return response()->json(['success'=>$video->filename]);
+        return response()->json(['success' => $video->filename]);
     }
 
-    public function videoExample() {
+    /**
+     * Carga la vista para ver un vídeo
+     */
+    public function verVideo($filename) {
+        $video = Video::where('filename','LIKE',$filename)->first();
+        $datos = [
+            'video' => $video
+        ];
+
         $usuarioIniciado = $this->comprobarLogin();
-        $videoActual = Video::where('id',2)->get();
+        if ($usuarioIniciado != null) {
+            $datos += [
+                'usuarioIniciado' => $usuarioIniciado
+            ];
+        }
+
+        return view('video', $datos);
+    }
+
+    public function videoExample()
+    {
+        $usuarioIniciado = $this->comprobarLogin();
+        $videoActual = Video::where('id', 2)->get();
 
         $datos = [
             'videoInfo' => $videoActual,
             'usuarioIniciado' => $usuarioIniciado
         ];
-        Return view('videoExample', $datos);
+        return view('videoExample', $datos);
     }
 
     //------------------MÉTODOS PRIVADOS
-    private function comprobarLogin() {
+    private function comprobarLogin()
+    {
         if (session()->has('usuarioIniciado')) {
             return session()->get('usuarioIniciado');
         } else {

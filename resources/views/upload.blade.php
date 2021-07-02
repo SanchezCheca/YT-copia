@@ -40,7 +40,7 @@
     <div class="row mx-0">
         <div class="col-12 col-md-8 col-xl-6 mx-auto p-3 text-center">
             <!-- Formulario para subida de vídeos -->
-            <form class="border rounded p-3  bg-light" action="{{ url('ajax-file-upload-progress-bar') }}" name="uploadForm"
+            <form class="border rounded p-3  bg-light" action="{{ url('upload') }}" name="uploadForm"
                 method="POST" enctype="multipart/form-data">
                 @csrf
                 <!-- Título del formulario -->
@@ -159,7 +159,7 @@
         });
     </script>
 
-
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="fonts/all.js"></script>
 
 </body>
