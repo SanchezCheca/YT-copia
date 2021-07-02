@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use App\Models\User;
 use App\Models\Video;
 //use Facade\FlareClient\Stacktrace\File;
 use Illuminate\Http\Request;
@@ -90,11 +91,31 @@ class contentController extends Controller
      * Carga la vista para ver un vídeo
      */
     public function verVideo($filename) {
+        //Carga el propio vídeo
         $video = Video::where('filename','LIKE',$filename)->first();
         $datos = [
             'video' => $video
         ];
 
+        //Añade 1 visualización al vídeo en cuestión
+        if ($video) {
+            $video->views++;
+            $video->save();
+        }
+
+        //Carga los vídeos recomendados (con un atributo extra para el nombre de usuario del creador)
+        $videosRecomendados = Video::take(10)->orderByDesc('created_at')->get();
+        $videosRecConNombre = [];
+        foreach ($videosRecomendados as $videoRec) {
+            $creador = User::find($videoRec->creator_id);
+            $videoRec['creatorUsername'] = $creador->username;
+            $videosRecConNombre[] = $videoRec;
+        }
+        $datos += [
+            'videosRecomendados' => $videosRecConNombre
+        ];
+
+        //Carga el usuario logueado
         $usuarioIniciado = $this->comprobarLogin();
         if ($usuarioIniciado != null) {
             $datos += [
