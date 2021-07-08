@@ -5,6 +5,7 @@
 <?php
 $ruta = Request::path();
 $rutaExploded = explode('/', $ruta);
+/*
 if (sizeof($rutaExploded) > 1) { ?>
     <link rel="stylesheet" href="../fonts/all.css">
     <link rel="stylesheet" href="../css/estilos.css">
@@ -12,6 +13,7 @@ if (sizeof($rutaExploded) > 1) { ?>
     <link rel="stylesheet" href="fonts/all.css">
     <link rel="stylesheet" href="css/estilos.css">
 <?php }
-
-
+*/
 ?>
+<link rel="stylesheet" href="{{url('fonts/all.css')}}">
+<link rel="stylesheet" href="{{url('css/estilos.css')}}">

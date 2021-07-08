@@ -5,6 +5,7 @@
 <?php
 $ruta = Request::path();
 $rutaExploded = explode('/', $ruta);
+/*
 if (sizeof($rutaExploded) > 1) {
     ?>
     <script src="../fonts/all.js"></script>
@@ -14,4 +15,6 @@ if (sizeof($rutaExploded) > 1) {
     <script src="fonts/all.js"></script>
     <?php
 }
+*/
 ?>
+<script src="{{url('fonts/all.js')}}"></script>

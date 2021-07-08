@@ -24,11 +24,34 @@
     <div class="row mx-0 px-5 mt-4">
         <div class="col-12 col-lg-8">
             <!-- CONTENIDO DE VÍDEO, TÍTULO Y DESCRIPCIÓN -->
-            <video class="video-js vjs-default-skin vjs-big-play-centered cajaVideo" controls preload="auto"
-                controlsList="nodownload" data-setup='{"example_option":true}'>
-                <source src="{{ $video->publicUrl }}" type="video/mp4" />
-                <p class="vjs-no-js">Si no puedes ver este vídeo es que tienes un navegador muy antigüo :)</p>
-            </video>
+            <div class="row">
+                <div class="col-12">
+                    <!-- Reproductor -->
+                    <video class="video-js vjs-default-skin vjs-big-play-centered cajaVideo" controls preload="auto"
+                    controlsList="nodownload" data-setup='{"example_option":true}'>
+                    <source src="{{ $video->publicUrl }}" type="video/mp4" />
+                    <p class="vjs-no-js">Si no puedes ver este vídeo es que tienes un navegador muy antigüo :)</p>
+                </video>
+                </div>
+                <div class="col-12">
+                    <p class="h3">
+                        {{ $video->title }}
+                    </p>
+                    <p>
+                        {{ $video->views }} visualizaciones | {{$video->likes}}<i class="far fa-thumbs-up"></i> | {{$video->dislikes}}<i class="far fa-thumbs-down"></i>
+                    </p>
+                    <p>
+                        <?php
+                        if (isset($hasLiked)) {
+                            echo 'Has liked: ';
+                            dd($hasLiked[0]);
+                        }
+                        ?>
+                    </p>
+                </div>
+            </div>
+
+
         </div>
         <div class="col-12 col-lg-4">
             <div class="row">

@@ -97,6 +97,21 @@ class contentController extends Controller
             'video' => $video
         ];
 
+        //Carga el usuario logueado
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado != null) {
+            $datos += [
+                'usuarioIniciado' => $usuarioIniciado
+            ];
+
+            //Comprueba si el usuario ha dado like al vídeo
+            //$hasLiked = false;
+            $hasLiked = DB::select('SELECT COUNT(video_id) FROM video_likes WHERE user_id = :id', ['id' => $usuarioIniciado->id]);
+            $datos += [
+                'hasLiked' => $hasLiked
+            ];
+        }
+
         //Añade 1 visualización al vídeo en cuestión
         if ($video) {
             $video->views++;
@@ -114,14 +129,6 @@ class contentController extends Controller
         $datos += [
             'videosRecomendados' => $videosRecConNombre
         ];
-
-        //Carga el usuario logueado
-        $usuarioIniciado = $this->comprobarLogin();
-        if ($usuarioIniciado != null) {
-            $datos += [
-                'usuarioIniciado' => $usuarioIniciado
-            ];
-        }
 
         return view('video', $datos);
     }
