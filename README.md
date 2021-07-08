@@ -1,6 +1,6 @@
 ## YT-copia
 
-Copia de YouTube. Los usuarios pueden:
+Los usuarios pueden:
 -   Subir vídeos
 -   Ver vídeos de otros usuarios
 -   Buscar por etiquetas
