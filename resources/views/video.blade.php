@@ -20,6 +20,7 @@
 <body>
     @include('navbar')
 
+
     <?php if (isset($video)) { ?>
     <div class="row mx-0 px-5 mt-4">
         <div class="col-12 col-lg-8">
