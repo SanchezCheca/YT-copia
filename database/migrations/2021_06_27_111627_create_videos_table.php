@@ -20,7 +20,7 @@ class CreateVideosTable extends Migration
             $table->string('thumbnailFilename');
             $table->unsignedBigInteger('creator_id');
             $table->string('title');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->integer('views')->default(0);
             $table->integer('likes')->default(0);
             $table->integer('dislikes')->default(0);

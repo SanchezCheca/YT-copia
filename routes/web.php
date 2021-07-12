@@ -18,14 +18,16 @@ Route::get('/login', function() {
 //------------PRINCIPAL
 Route::get('/', [controladorPrincipal::class, 'inicio']);
 Route::get('inicio', [controladorPrincipal::class, 'inicio']);
-Route::get('upload', [controladorPrincipal::class, 'aUpload']);
+//Route::get('upload', [controladorPrincipal::class, 'aUpload']);
 
 //------------CONTENIDO
 Route::get('user/{username}', [contentController::class, 'verCanal']);
-Route::get('ajax-file-upload-progress-bar', [contentController::class, 'index']);
-Route::post('ajax-file-upload-progress-bar', [contentController::class, 'upload']);
-
+Route::get('upload', [contentController::class, 'aUpload']);
+Route::post('upload', [contentController::class, 'upload']);
+Route::get('video/{filename}', [contentController::class, 'verVideo']);
 Route::get('videoExample', [contentController::class, 'videoExample']);
+Route::get('likeVideo/{filename}', [contentController::class, 'likeVideo']);
+Route::get('dislikeVideo/{filename}', [contentController::class, 'dislikeVideo']);
 
 //-------------REGISTRO Y LOGIN
 Route::post('register', [loginController::class, 'registrarCuenta']);
