@@ -26,6 +26,8 @@ Route::get('upload', [contentController::class, 'aUpload']);
 Route::post('upload', [contentController::class, 'upload']);
 Route::get('video/{filename}', [contentController::class, 'verVideo']);
 Route::get('videoExample', [contentController::class, 'videoExample']);
+Route::get('likeVideo/{filename}', [contentController::class, 'likeVideo']);
+Route::get('dislikeVideo/{filename}', [contentController::class, 'dislikeVideo']);
 
 //-------------REGISTRO Y LOGIN
 Route::post('register', [loginController::class, 'registrarCuenta']);

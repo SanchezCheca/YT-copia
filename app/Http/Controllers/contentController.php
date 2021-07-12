@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dislike;
+use App\Models\Like;
 use App\Models\Tag;
 use App\Models\User;
 use App\Models\Video;
@@ -90,9 +92,14 @@ class contentController extends Controller
     /**
      * Carga la vista para ver un vídeo
      */
-    public function verVideo($filename) {
+    public function verVideo($filename)
+    {
         //Carga el propio vídeo
-        $video = Video::where('filename','LIKE',$filename)->first();
+        $video = Video::where('filename', 'LIKE', $filename)->first();
+        $likes = DB::select('SELECT COUNT(video_id) AS "likes" FROM video_likes WHERE video_id = :id', ['id' => $video->id]);
+        $video->likes = $likes[0]->likes;
+        $dislikes = DB::select('SELECT COUNT(video_id) AS "dislikes" FROM video_dislikes WHERE video_id = :id', ['id' => $video->id]);
+        $video->dislikes = $dislikes[0]->dislikes;
         $datos = [
             'video' => $video
         ];
@@ -105,10 +112,25 @@ class contentController extends Controller
             ];
 
             //Comprueba si el usuario ha dado like al vídeo
-            //$hasLiked = false;
-            $hasLiked = DB::select('SELECT COUNT(video_id) FROM video_likes WHERE user_id = :id', ['id' => $usuarioIniciado->id]);
+            $hasLiked = DB::select('SELECT COUNT(video_id) AS "liked" FROM video_likes WHERE user_id = :id AND video_id = :videoId', ['id' => $usuarioIniciado->id, 'videoId' => $video->id]);
+            if ($hasLiked[0]->liked == 1) {
+                $hasLiked = true;
+            } else {
+                $hasLiked = false;
+            }
             $datos += [
                 'hasLiked' => $hasLiked
+            ];
+
+            //Comprueba si el usuario ha dado dislike al vídeo
+            $hasDisliked = DB::select('SELECT COUNT(video_id) AS "disliked" FROM video_dislikes WHERE user_id = :id AND video_id = :videoId', ['id' => $usuarioIniciado->id, 'videoId' => $video->id]);
+            if ($hasDisliked[0]->disliked == 1) {
+                $hasDisliked = true;
+            } else {
+                $hasDisliked = false;
+            }
+            $datos += [
+                'hasDisliked' => $hasDisliked
             ];
         }
 
@@ -131,6 +153,68 @@ class contentController extends Controller
         ];
 
         return view('video', $datos);
+    }
+
+    //Like a un video
+    public function likeVideo($filename)
+    {
+        //Comprueba que se ha iniciado sesión
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado) {
+            $video = Video::where('filename','LIKE',$filename)->first();
+
+            //Comprueba si se le ha dado like ya
+            $like = Like::where('user_id','=',$usuarioIniciado->id)->where('video_id','=',$video->id)->first();
+            if ($like != null) {
+                //Ya ha dado like, lo quita
+                DB::delete('DELETE FROM video_likes WHERE video_id = ? AND user_id = ?', [$video->id,$usuarioIniciado->id]);
+                return redirect(url('video/' . $filename));
+            } else {
+                //Elimina el dislike de haberlo
+                $dislike = Dislike::where('user_id','=',$usuarioIniciado->id)->where('video_id','=',$video->id)->first();
+                if ($dislike != null) {
+                    DB::delete('DELETE FROM video_dislikes WHERE video_id = ? AND user_id = ?', [$video->id,$usuarioIniciado->id]);
+                }
+
+                //Añade el like
+                DB::insert('INSERT INTO video_likes VALUES (?, ?, null, null)', [$video->id, $usuarioIniciado->id]);
+                return redirect(url('video/' . $filename));
+            }
+        } else {
+            //No se ha iniciado sesión
+            return redirect(url('login'));
+        }
+    }
+
+    //Dislike a un video
+    public function dislikeVideo($filename)
+    {
+        //Comprueba que se ha iniciado sesión
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado) {
+            $video = Video::where('filename','LIKE',$filename)->first();
+
+            //Comprueba si se le ha dado dislike ya
+            $dislike = Dislike::where('user_id','=',$usuarioIniciado->id)->where('video_id','=',$video->id)->first();
+            if ($dislike != null) {
+                //Ya ha dado dislike, lo quita
+                DB::delete('DELETE FROM video_dislikes WHERE video_id = ? AND user_id = ?', [$video->id,$usuarioIniciado->id]);
+                return redirect(url('video/' . $filename));
+            } else {
+                //Elimina el like de haberlo
+                $like = Like::where('user_id','=',$usuarioIniciado->id)->where('video_id','=',$video->id)->first();
+                if ($like != null) {
+                    DB::delete('DELETE FROM video_likes WHERE video_id = ? AND user_id = ?', [$video->id,$usuarioIniciado->id]);
+                }
+
+                //Añade el dislike
+                DB::insert('INSERT INTO video_dislikes VALUES (?, ?, null, null)', [$video->id, $usuarioIniciado->id]);
+                return redirect(url('video/' . $filename));
+            }
+        } else {
+            //No se ha iniciado sesión
+            return redirect(url('login'));
+        }
     }
 
     public function videoExample()
