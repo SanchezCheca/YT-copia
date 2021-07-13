@@ -22,7 +22,7 @@ Route::get('inicio', [controladorPrincipal::class, 'inicio']);
 
 //------------CONTENIDO
 Route::get('user/{username}', [contentController::class, 'verCanal']);
-Route::get('upload', [contentController::class, 'aUpload']);
+Route::get('upload', [contentController::class, 'aUpload'])->middleware('auth');
 Route::post('upload', [contentController::class, 'upload']);
 Route::get('video/{filename}', [contentController::class, 'verVideo']);
 Route::get('videoExample', [contentController::class, 'videoExample']);

@@ -19,6 +19,23 @@ class contentController extends Controller
     //Devuelve la información de un canal
     public function verCanal($username)
     {
+        $usuarioIniciado = $this->comprobarLogin();
+        $datos = [
+            'usuarioIniciado' => $usuarioIniciado
+        ];
+        $user = User::where('username','LIKE',$username)->first();
+        if ($user) {
+            $subs = DB::select('SELECT COUNT(user_following_id) AS subs FROM user_following WHERE user_following_id = ?', [$user->id]);
+            $user->subs = $subs[0]->subs;
+
+            $datos += [
+                'user' => $user
+            ];
+            return view('canal',$datos);
+        } else {
+            //El usuario no existe
+            return view('canal', $datos);
+        }
     }
 
     /**

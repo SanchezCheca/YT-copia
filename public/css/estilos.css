@@ -29,3 +29,12 @@
 .viewsVideoRecomendado {
     font-size: 0.7em !important;
 }
+
+/** CANAL **/
+.cabeceraCanal {
+    height: 8vh !important;
+}
+
+.cabeceraCanal img {
+    height: 8vh !important;
+}
