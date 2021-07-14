@@ -39,7 +39,7 @@
                         {{ $video->title }}
                     </p>
                     <p>
-                        {{ $video->views }} visualizaciones&nbsp;&nbsp;
+                        {{ number_format($video->views, 0, ',', '.') }} visualizaciones&nbsp;&nbsp;
                         <?php
                         //Likes
                         if (isset($hasLiked) && $hasLiked) {
@@ -87,7 +87,7 @@
                                 {{ $creator->username }}
                             </p>
                             <p class="textoMenor mt-0 ml-5">
-                                {{ $creator->nSubs }}
+                                {{ number_format($creator->nSubs, 0, ',', '.') }}
                                 <?php
                                 if ($creator->nSubs == 1) {
                                     echo ' suscriptor';
@@ -104,9 +104,8 @@
                         }
                         ?>
                     <hr>
-                    <p>
-                        {{ $video->description }}
-                    </p>
+                    <!-- DESCRIPCION -->
+                    <p class="formateado">{{ $video->description }}</p>
                 </div>
             </div>
 

@@ -122,6 +122,54 @@ class contentController extends Controller
     }
 
     /**
+     * Carga el usuario para ir a editar perfil
+     */
+    public function aEditProfile() {
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado) {
+            $datos = [
+                'usuarioIniciado' => $usuarioIniciado
+            ];
+            return view('editProfile', $datos);
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    /**
+     * Actualiza un usuario
+     */
+    public function editProfile(Request $req) {
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado) {
+            //Guarda la imagen si existe
+            if ($req->file('profileImage')) {
+                $path = $req->file('profileImage')->store('profileImages', 's3');
+                $filename = basename($path);
+                $publicProfileImageUrl = 'https://vdm2.s3.eu-west-3.amazonaws.com/profileImages/' . $filename;
+
+                //Elimina la imagen de perfil actual del servidor
+                if ($usuarioIniciado->publicProfileImageUrl != 'images/defaultUserImage.png') {
+                    $actualFilename = explode('/', $usuarioIniciado->publicProfileImageUrl);
+                    $actualFilename = $actualFilename[sizeof($actualFilename) - 1];
+
+                    Storage::disk('s3')->delete('profileImages/' . $actualFilename);
+                }
+
+                $usuarioIniciado->publicProfileImageUrl = $publicProfileImageUrl;
+            }
+
+            //Guarda la descripción
+            $usuarioIniciado->about = $req->input('descripcion');
+
+            $usuarioIniciado->save();
+            return redirect(url('user/' . $usuarioIniciado->username));
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    /**
      * Manda a la vista de subir vídeo
      */
     public function aUpload()

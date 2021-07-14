@@ -30,6 +30,8 @@ Route::get('likeVideo/{filename}', [contentController::class, 'likeVideo']);
 Route::get('dislikeVideo/{filename}', [contentController::class, 'dislikeVideo']);
 Route::post('subscribe/{username}', [contentController::class, 'subscribe']);
 Route::get('user/{username}/videos', [contentController::class, 'verVideosCanal']);
+Route::get('editProfile', [contentController::class, 'aEditProfile']);
+Route::post('editProfile', [contentController::class, 'editProfile']);
 
 //-------------REGISTRO Y LOGIN
 Route::post('register', [loginController::class, 'registrarCuenta']);
