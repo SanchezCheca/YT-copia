@@ -18,7 +18,7 @@
                         <a href="{{url('upload')}}" class="my-auto text-dark"><i class="fas fa-upload"></i> Subir</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{url('images/defaultUserImage.png')}}" class="perfilRedondo" alt="Perfil">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{url($usuarioIniciado->publicProfileImageUrl)}}" class="perfilRedondo" alt="Perfil">
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink2">
                             <a class="dropdown-item" href="{{url('user/' . $usuarioIniciado->username)}}"><i class="fas fa-video"></i> Mi canal</a>
