@@ -36,9 +36,11 @@
                             if (isset($usuarioIniciado) && $user->id == $usuarioIniciado->id) {
                                 //Es el canal propio
                                 ?>
-                    <button class="btn btn-primary float-right mt-2">
-                        Editar perfil
-                    </button>
+                    <a href="{{url('editProfile')}}">
+                        <button class="btn btn-primary float-right mt-2">
+                            Editar perfil
+                        </button>
+                    </a>
                     <?php
                             }
                                 ?>
@@ -124,9 +126,7 @@
                 <p class="h4 mt-2">
                     About
                 </p>
-                <p>
-
-                </p>
+                <p class="formateado">{{$user->about}}</p>
                 <p class="h5 my-1">
                     Estadísticas
                 </p>

@@ -65,7 +65,7 @@ class loginController extends Controller
                     'mensaje' => 'Has iniciado sesión',
                     'usuarioIniciado' => $usuarioIniciado
                 ];
-                Return redirect()->back();
+                Return redirect('/');
             } else {
                 $datos = [
                     'mensaje' => 'La combinación nombre de usuario y contraseña no es correcta.'

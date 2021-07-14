@@ -10,6 +10,10 @@
     height: 35vw;
 }
 
+.formateado {
+    white-space: pre-wrap;
+}
+
 
 @media (max-width: 576px) {
     .botonBuscar {
