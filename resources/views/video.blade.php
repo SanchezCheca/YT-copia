@@ -44,12 +44,14 @@
                         //Likes
                         if (isset($hasLiked) && $hasLiked) {
                             ?>
-                            <a href="{{url('likeVideo/' . $video->filename)}}" class="text-dark" style="text-decoration: none"><i class="fas fa-thumbs-up"></i> {{$video->likes}}</a>
-                            <?php
+                        <a href="{{ url('likeVideo/' . $video->filename) }}" class="text-dark"
+                            style="text-decoration: none"><i class="fas fa-thumbs-up"></i> {{ $video->likes }}</a>
+                        <?php
                         } else {
                             ?>
-                            <a href="{{url('likeVideo/' . $video->filename)}}" class="text-dark" style="text-decoration: none"><i class="far fa-thumbs-up"></i> {{$video->likes}}</a>
-                            <?php
+                        <a href="{{ url('likeVideo/' . $video->filename) }}" class="text-dark"
+                            style="text-decoration: none"><i class="far fa-thumbs-up"></i> {{ $video->likes }}</a>
+                        <?php
                         }
 
                         echo ' &nbsp; ';
@@ -57,22 +59,53 @@
                         //Dislikes
                         if (isset($hasDisliked) && $hasDisliked) {
                             ?>
-                            <a href="{{url('dislikeVideo/' . $video->filename)}}" class="text-dark" style="text-decoration: none"><i class="fas fa-thumbs-down"></i> {{$video->dislikes}}</a>
-                            <?php
+                        <a href="{{ url('dislikeVideo/' . $video->filename) }}" class="text-dark"
+                            style="text-decoration: none"><i class="fas fa-thumbs-down"></i>
+                            {{ $video->dislikes }}</a>
+                        <?php
                         } else {
                             ?>
-                            <a href="{{url('dislikeVideo/' . $video->filename)}}" class="text-dark" style="text-decoration: none"><i class="far fa-thumbs-down"></i> {{$video->dislikes}}</a>
-                            <?php
+                        <a href="{{ url('dislikeVideo/' . $video->filename) }}" class="text-dark"
+                            style="text-decoration: none"><i class="far fa-thumbs-down"></i>
+                            {{ $video->dislikes }}</a>
+                        <?php
                         }
 
                         ?>
-                        <?php
-                        //dd($video)
-                        ?>
                     </p>
+                    <?php
+                        if (isset($creator)) {
+                            ?>
+                    <hr>
+                    <a href="{{ url('user/' . $creator->username) }}" class="text-dark"
+                        style="text-decoration: none; text-color: black">
+                        <img src="{{ url($creator->publicProfileImageUrl) }}" height="45vh"
+                            class="rounded-circle float-left mr-2">
+
+                        <div>
+                            <p class="textoMayor mb-0 ml-5">
+                                {{ $creator->username }}
+                            </p>
+                            <p class="textoMenor mt-0 ml-5">
+                                {{ $creator->nSubs }}
+                                <?php
+                                if ($creator->nSubs == 1) {
+                                    echo ' suscriptor';
+                                } else {
+                                    echo ' suscriptores';
+                                }
+                                ?>
+                            </p>
+                        </div>
+
+
+                    </a>
+                    <?php
+                        }
+                        ?>
                     <hr>
                     <p>
-                        {{$video->description}}
+                        {{ $video->description }}
                     </p>
                 </div>
             </div>

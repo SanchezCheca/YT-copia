@@ -23,7 +23,7 @@ class contentController extends Controller
         $datos = [
             'usuarioIniciado' => $usuarioIniciado
         ];
-        $user = User::where('username','LIKE',$username)->first();
+        $user = User::where('username', 'LIKE', $username)->first();
         if ($user) {
             //nº de suscriptores
             $subs = DB::select('SELECT COUNT(user_following_id) AS subs FROM user_following WHERE user_following_id = ?', [$user->id]);
@@ -41,8 +41,21 @@ class contentController extends Controller
             $dislikes = DB::select('SELECT COUNT(video_id) AS dislikes FROM video_dislikes WHERE video_id IN (SELECT id FROM videos WHERE creator_id = ?)', [$user->id]);
             $user->dislikes = $dislikes[0]->dislikes;
 
+            //Comprueba si ya está suscrito
+            if ($usuarioIniciado) {
+                $suscrito = DB::select('SELECT COUNT(user_id) AS suscrito FROM user_following WHERE user_id = ? AND user_following_id = ?', [$usuarioIniciado->id, $user->id]);
+                if ($suscrito[0]->suscrito == 0) {
+                    $suscrito = false;
+                } else {
+                    $suscrito = true;
+                }
+                $datos += [
+                    'estaSuscrito' => $suscrito
+                ];
+            }
+
             //Carga los vídeos del usuario
-            $userVideos = Video::where('creator_id','=',$user->id)->take(9)->orderByDesc('created_at')->get();
+            $userVideos = Video::where('creator_id', '=', $user->id)->take(9)->orderByDesc('created_at')->get();
             if ($userVideos) {
                 $datos += [
                     'userVideos' => $userVideos
@@ -56,10 +69,55 @@ class contentController extends Controller
             $datos += [
                 'user' => $user
             ];
-            return view('canal',$datos);
+            return view('canal', $datos);
         } else {
             //El usuario no existe
             return view('canal', $datos);
+        }
+    }
+
+    /**
+     * Carga todos los vídeos de un canal
+     */
+    public function verVideosCanal($username)
+    {
+        $usuarioIniciado = $this->comprobarLogin();
+        $datos = [
+            'usuarioIniciado' => $usuarioIniciado
+        ];
+        $user = User::where('username','LIKE',$username)->first();
+        if ($user) {
+            //nº de suscriptores
+            $subs = DB::select('SELECT COUNT(user_following_id) AS subs FROM user_following WHERE user_following_id = ?', [$user->id]);
+            $user->subs = $subs[0]->subs;
+
+            //Visitas totales
+            $views = DB::select('SELECT SUM(views) AS views FROM videos WHERE creator_id = ?', [$user->id]);
+            $user->views = $views[0]->views;
+
+            //Comprueba si ya está suscrito
+            if ($usuarioIniciado) {
+                $suscrito = DB::select('SELECT COUNT(user_id) AS suscrito FROM user_following WHERE user_id = ? AND user_following_id = ?', [$usuarioIniciado->id, $user->id]);
+                if ($suscrito[0]->suscrito == 0) {
+                    $suscrito = false;
+                } else {
+                    $suscrito = true;
+                }
+                $datos += [
+                    'estaSuscrito' => $suscrito
+                ];
+            }
+
+            //Vídeos
+            $userVideos = Video::where('creator_id', '=', $user->id)->orderByDesc('created_at')->get();
+            $datos += [
+                'user' => $user,
+                'userVideos' => $userVideos
+            ];
+
+            return view('verVideosCanal',$datos);
+        } else {
+            return view('verVideosCanal',$datos);
         }
     }
 
@@ -142,8 +200,17 @@ class contentController extends Controller
         $video->likes = $likes[0]->likes;
         $dislikes = DB::select('SELECT COUNT(video_id) AS "dislikes" FROM video_dislikes WHERE video_id = :id', ['id' => $video->id]);
         $video->dislikes = $dislikes[0]->dislikes;
+
         $datos = [
             'video' => $video
+        ];
+
+        //Datos del creador del vídeo
+        $creator = User::where('id','=',$video->creator_id)->first();
+        $nSubs = DB::select('SELECT COUNT(user_following_id) AS nSubs FROM user_following WHERE user_following_id = ?', [$creator->id]);
+        $creator->nSubs = $nSubs[0]->nSubs;
+        $datos += [
+            'creator' => $creator
         ];
 
         //Carga el usuario logueado
@@ -203,19 +270,19 @@ class contentController extends Controller
         //Comprueba que se ha iniciado sesión
         $usuarioIniciado = $this->comprobarLogin();
         if ($usuarioIniciado) {
-            $video = Video::where('filename','LIKE',$filename)->first();
+            $video = Video::where('filename', 'LIKE', $filename)->first();
 
             //Comprueba si se le ha dado like ya
-            $like = Like::where('user_id','=',$usuarioIniciado->id)->where('video_id','=',$video->id)->first();
+            $like = Like::where('user_id', '=', $usuarioIniciado->id)->where('video_id', '=', $video->id)->first();
             if ($like != null) {
                 //Ya ha dado like, lo quita
-                DB::delete('DELETE FROM video_likes WHERE video_id = ? AND user_id = ?', [$video->id,$usuarioIniciado->id]);
+                DB::delete('DELETE FROM video_likes WHERE video_id = ? AND user_id = ?', [$video->id, $usuarioIniciado->id]);
                 return redirect(url('video/' . $filename));
             } else {
                 //Elimina el dislike de haberlo
-                $dislike = Dislike::where('user_id','=',$usuarioIniciado->id)->where('video_id','=',$video->id)->first();
+                $dislike = Dislike::where('user_id', '=', $usuarioIniciado->id)->where('video_id', '=', $video->id)->first();
                 if ($dislike != null) {
-                    DB::delete('DELETE FROM video_dislikes WHERE video_id = ? AND user_id = ?', [$video->id,$usuarioIniciado->id]);
+                    DB::delete('DELETE FROM video_dislikes WHERE video_id = ? AND user_id = ?', [$video->id, $usuarioIniciado->id]);
                 }
 
                 //Añade el like
@@ -234,19 +301,19 @@ class contentController extends Controller
         //Comprueba que se ha iniciado sesión
         $usuarioIniciado = $this->comprobarLogin();
         if ($usuarioIniciado) {
-            $video = Video::where('filename','LIKE',$filename)->first();
+            $video = Video::where('filename', 'LIKE', $filename)->first();
 
             //Comprueba si se le ha dado dislike ya
-            $dislike = Dislike::where('user_id','=',$usuarioIniciado->id)->where('video_id','=',$video->id)->first();
+            $dislike = Dislike::where('user_id', '=', $usuarioIniciado->id)->where('video_id', '=', $video->id)->first();
             if ($dislike != null) {
                 //Ya ha dado dislike, lo quita
-                DB::delete('DELETE FROM video_dislikes WHERE video_id = ? AND user_id = ?', [$video->id,$usuarioIniciado->id]);
+                DB::delete('DELETE FROM video_dislikes WHERE video_id = ? AND user_id = ?', [$video->id, $usuarioIniciado->id]);
                 return redirect(url('video/' . $filename));
             } else {
                 //Elimina el like de haberlo
-                $like = Like::where('user_id','=',$usuarioIniciado->id)->where('video_id','=',$video->id)->first();
+                $like = Like::where('user_id', '=', $usuarioIniciado->id)->where('video_id', '=', $video->id)->first();
                 if ($like != null) {
-                    DB::delete('DELETE FROM video_likes WHERE video_id = ? AND user_id = ?', [$video->id,$usuarioIniciado->id]);
+                    DB::delete('DELETE FROM video_likes WHERE video_id = ? AND user_id = ?', [$video->id, $usuarioIniciado->id]);
                 }
 
                 //Añade el dislike
@@ -255,6 +322,35 @@ class contentController extends Controller
             }
         } else {
             //No se ha iniciado sesión
+            return redirect(url('login'));
+        }
+    }
+
+    //Se suscribe/desuscribe a un usuario
+    public function subscribe($username)
+    {
+        $usuarioIniciado = $this->comprobarLogin();
+        $user = User::where('username', 'LIKE', $username)->first();
+        //No se puede suscribir a si mismo
+        if ($usuarioIniciado) {
+            if ($usuarioIniciado->id != $user->id) {
+                if ($usuarioIniciado) {
+                    //Comprueba si ya está suscrito
+                    $suscrito = DB::select('SELECT COUNT(user_id) AS suscrito FROM user_following WHERE user_id = ? AND user_following_id = ?', [$usuarioIniciado->id, $user->id]);
+                    if ($suscrito[0]->suscrito == 0) {
+                        //No está suscrito, se suscribe
+                        DB::insert('INSERT INTO user_following VALUES (?,?)', [$usuarioIniciado->id, $user->id]);
+                        return redirect()->back();
+                    } else {
+                        //Está suscrito, se desuscribe
+                        DB::delete('DELETE FROM user_following WHERE user_id = ? AND user_following_id = ?', [$usuarioIniciado->id, $user->id]);
+                        return redirect()->back();
+                    }
+                }
+            } else {
+                return redirect()->back();
+            }
+        } else {
             return redirect(url('login'));
         }
     }
