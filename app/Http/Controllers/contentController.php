@@ -25,8 +25,33 @@ class contentController extends Controller
         ];
         $user = User::where('username','LIKE',$username)->first();
         if ($user) {
+            //nº de suscriptores
             $subs = DB::select('SELECT COUNT(user_following_id) AS subs FROM user_following WHERE user_following_id = ?', [$user->id]);
             $user->subs = $subs[0]->subs;
+
+            //Visitas totales
+            $views = DB::select('SELECT SUM(views) AS views FROM videos WHERE creator_id = ?', [$user->id]);
+            $user->views = $views[0]->views;
+
+            //nº de likes
+            $likes = DB::select('SELECT COUNT(video_id) AS likes FROM video_likes WHERE video_id IN (SELECT id FROM videos WHERE creator_id = ?)', [$user->id]);
+            $user->likes = $likes[0]->likes;
+
+            //nº de dislikes
+            $dislikes = DB::select('SELECT COUNT(video_id) AS dislikes FROM video_dislikes WHERE video_id IN (SELECT id FROM videos WHERE creator_id = ?)', [$user->id]);
+            $user->dislikes = $dislikes[0]->dislikes;
+
+            //Carga los vídeos del usuario
+            $userVideos = Video::where('creator_id','=',$user->id)->take(9)->orderByDesc('created_at')->get();
+            if ($userVideos) {
+                $datos += [
+                    'userVideos' => $userVideos
+                ];
+            }
+
+            //Carga el nº de vídeos del usuario
+            $nVideos = DB::select('SELECT COUNT(id) AS nVideos FROM videos WHERE creator_id = ?', [$user->id]);
+            $user->nVideos = $nVideos[0]->nVideos;
 
             $datos += [
                 'user' => $user

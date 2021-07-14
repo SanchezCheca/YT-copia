@@ -82,7 +82,7 @@ class loginController extends Controller
                         'mensaje' => 'Has iniciado sesión',
                         'usuarioIniciado' => $usuarioIniciado
                     ];
-                    Return view('inicio',$datos);
+                    Return redirect()->back();
                 } else {
                     $datos = [
                         'mensaje' => 'La combinación correo electrónico y contraseña no es correcta.'
@@ -104,6 +104,6 @@ class loginController extends Controller
      */
     public function cerrarSesion() {
         session()->forget('usuarioIniciado');
-        Return redirect('/');
+        Return redirect()->back();
     }
 }
