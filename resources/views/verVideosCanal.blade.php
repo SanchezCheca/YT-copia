@@ -85,15 +85,18 @@
         </div>
         <div class="row bg-light">
 
-            <div class="col-12 col-md-8">
+            <div class="col-12">
                 <div class="row my-2">
-                    <div class="col-12">
-                        <p class="h4 mt-2">
-                            Vídeos ({{ $user->nVideos }}) <a href="{{url('user/' . $user->username . '/videos')}}" class="textoMenor">Ver todos</a>
+
+                    <?php
+                    if (isset($userVideos) && sizeof($userVideos) > 0) {
+                        ?>
+                    <div class="col-12 mb-2">
+                        <p class="h4 my-2">
+                            Vídeos ({{ sizeof($userVideos) }}) <a href="{{url('user/' . $user->username)}}">Volver</a>
                         </p>
                     </div>
                     <?php
-                    if (isset($userVideos)) {
                         foreach ($userVideos as $videoRec) {
                             ?>
                     <div class="col-lg-4 col-sm-6 col-12 text-center mb-4">
@@ -114,32 +117,14 @@
                     <p class="font-italic m-2">
                         El usuario no tiene vídeos
                     </p>
+                    <p class="d-inline mt-1 textoMayor">
+                        <a href="{{url('user/' . $user->username)}}">Volver</a>
+                    </p>
                     <?php
                     }
                     ?>
                 </div>
 
-            </div>
-            <div class="col-12 col-md-4">
-                <p class="h4 mt-2">
-                    About
-                </p>
-                <p>
-
-                </p>
-                <p class="h5 my-1">
-                    Estadísticas
-                </p>
-                <p class="textoEstadisticas">
-                    <i class="fas fa-users"></i> Suscriptores: {{ number_format($user->subs, 0, ',', '.') }}<br>
-                    <i class="fas fa-chart-bar"></i> Visualizaciones totales: {{ number_format($user->views, 0, ',', '.') }}<br>
-                    <i class="fas fa-video"></i> vídeos: {{ number_format($user->nVideos, 0, ',', '.') }}<br>
-                    <i class="far fa-thumbs-up"></i> total de Likes: {{ number_format($user->likes, 0, ',', '.') }}<br>
-                    <i class="far fa-thumbs-down"></i> total de dislikes: {{ number_format($user->dislikes, 0, ',', '.') }}<br>
-                </p>
-                <p class="textoEstadisticas font-italic">
-                    <i class="far fa-calendar-alt"></i> Fecha de creación: {{ $user->created_at->format('d-m-Y') }}
-                </p>
             </div>
         </div>
         <div class="row rouded-bottom">

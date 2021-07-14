@@ -22,12 +22,14 @@ Route::get('inicio', [controladorPrincipal::class, 'inicio']);
 
 //------------CONTENIDO
 Route::get('user/{username}', [contentController::class, 'verCanal']);
-Route::get('upload', [contentController::class, 'aUpload']);
+Route::get('upload', [contentController::class, 'aUpload'])->middleware('auth');
 Route::post('upload', [contentController::class, 'upload']);
 Route::get('video/{filename}', [contentController::class, 'verVideo']);
 Route::get('videoExample', [contentController::class, 'videoExample']);
 Route::get('likeVideo/{filename}', [contentController::class, 'likeVideo']);
 Route::get('dislikeVideo/{filename}', [contentController::class, 'dislikeVideo']);
+Route::post('subscribe/{username}', [contentController::class, 'subscribe']);
+Route::get('user/{username}/videos', [contentController::class, 'verVideosCanal']);
 
 //-------------REGISTRO Y LOGIN
 Route::post('register', [loginController::class, 'registrarCuenta']);

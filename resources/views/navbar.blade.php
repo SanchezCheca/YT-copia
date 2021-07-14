@@ -7,14 +7,14 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <form class="form-inline mx-auto">
         <input class="form-control mr-0" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-dark ml-0" type="submit"><i class="fas fa-search"></i></button>
+        <button class="btn btn-outline-dark ml-0 botonBuscar" type="submit"><i class="fas fa-search"></i></button>
       </form>
 
         <?php
             if (isset($usuarioIniciado)) {
                 ?>
-                <ul class="navbar-nav mt-2 mt-lg-0">
-                    <li class="nav-item my-auto mr-2">
+                <ul class="navbar-nav mt-2 mt-lg-0 enLineaPeq">
+                    <li class="nav-item my-auto mr-2 botonSubir">
                         <a href="{{url('upload')}}" class="my-auto text-dark"><i class="fas fa-upload"></i> Subir</a>
                     </li>
                     <li class="nav-item dropdown">

@@ -10,6 +10,19 @@
     height: 35vw;
 }
 
+
+@media (max-width: 576px) {
+    .botonBuscar {
+        width: 100%;
+    }
+
+
+    .videosCanal {
+        width: 100% !important;
+    }
+}
+
+
 /**  VÍDEOS RECOMENDADOS **/
 .tituloVideoRecomendado {
     font-size: 1.3em !important;
@@ -28,4 +41,25 @@
 
 .viewsVideoRecomendado {
     font-size: 0.7em !important;
+}
+
+/** CANAL **/
+.cabeceraCanal {
+    height: 8vh !important;
+}
+
+.cabeceraCanal img {
+    height: 8vh !important;
+}
+
+.textoMenor {
+    font-size: 0.7em !important;
+}
+
+.textoEstadisticas {
+    font-size: 0.9em !important;
+}
+
+.textoMayor {
+    font-size: 1.2em !important;
 }
