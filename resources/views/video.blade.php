@@ -35,8 +35,21 @@
                     </video>
                 </div>
                 <div class="col-12 mt-2">
+                    <!-- TÍTULO -->
                     <p class="h3">
                         {{ $video->title }}
+                        <?php
+                        if (isset($usuarioIniciado) && ($usuarioIniciado->rol == 1 || $usuarioIniciado->id == $creator->id)) {
+                            //Es el creador del vídeo o bien un administrador, muestra botón para editar
+                            ?>
+                            <a href="{{url('video/' . $video->filename . '/edit')}}">
+                                <button class="btn btn-info float-right">
+                                    EDITAR VÍDEO
+                                </button>
+                            </a>
+                            <?php
+                        }
+                        ?>
                     </p>
                     <p>
                         {{ number_format($video->views, 0, ',', '.') }} visualizaciones&nbsp;&nbsp;
@@ -148,7 +161,7 @@
     <?php } else {
         ?>
     <p class="mx-auto">
-        El vídeo no se encuentra, <a href="inicio">volver a inicio.</a>
+        El vídeo no se encuentra, <a href="{{url('/')}}">volver a inicio.</a>
     </p>
     <?php
     } ?>

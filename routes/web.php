@@ -25,6 +25,8 @@ Route::post('subscribe/{username}', [contentController::class, 'subscribe']);
 Route::get('user/{username}/videos', [contentController::class, 'verVideosCanal'])->middleware('controlarRutaActual');
 Route::get('editProfile', [contentController::class, 'aEditProfile']);
 Route::post('editProfile', [contentController::class, 'editProfile']);
+Route::get('video/{filename}/edit', [contentController::class, 'aEditarVideo']);
+Route::post('editVideo', [contentController::class, 'editarVideo']);
 
 //-------------REGISTRO Y LOGIN
 Route::post('register', [loginController::class, 'registrarCuenta']);

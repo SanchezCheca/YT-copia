@@ -85,7 +85,7 @@ class contentController extends Controller
         $datos = [
             'usuarioIniciado' => $usuarioIniciado
         ];
-        $user = User::where('username','LIKE',$username)->first();
+        $user = User::where('username', 'LIKE', $username)->first();
         if ($user) {
             //nº de suscriptores
             $subs = DB::select('SELECT COUNT(user_following_id) AS subs FROM user_following WHERE user_following_id = ?', [$user->id]);
@@ -115,16 +115,17 @@ class contentController extends Controller
                 'userVideos' => $userVideos
             ];
 
-            return view('verVideosCanal',$datos);
+            return view('verVideosCanal', $datos);
         } else {
-            return view('verVideosCanal',$datos);
+            return view('verVideosCanal', $datos);
         }
     }
 
     /**
      * Carga el usuario para ir a editar perfil
      */
-    public function aEditProfile() {
+    public function aEditProfile()
+    {
         $usuarioIniciado = $this->comprobarLogin();
         if ($usuarioIniciado) {
             $datos = [
@@ -139,7 +140,8 @@ class contentController extends Controller
     /**
      * Actualiza un usuario
      */
-    public function editProfile(Request $req) {
+    public function editProfile(Request $req)
+    {
         $usuarioIniciado = $this->comprobarLogin();
         if ($usuarioIniciado) {
             //Guarda la imagen si existe
@@ -244,51 +246,57 @@ class contentController extends Controller
     {
         //Carga el propio vídeo
         $video = Video::where('filename', 'LIKE', $filename)->first();
-        $likes = DB::select('SELECT COUNT(video_id) AS "likes" FROM video_likes WHERE video_id = :id', ['id' => $video->id]);
-        $video->likes = $likes[0]->likes;
-        $dislikes = DB::select('SELECT COUNT(video_id) AS "dislikes" FROM video_dislikes WHERE video_id = :id', ['id' => $video->id]);
-        $video->dislikes = $dislikes[0]->dislikes;
-
-        $datos = [
-            'video' => $video
-        ];
-
-        //Datos del creador del vídeo
-        $creator = User::where('id','=',$video->creator_id)->first();
-        $nSubs = DB::select('SELECT COUNT(user_following_id) AS nSubs FROM user_following WHERE user_following_id = ?', [$creator->id]);
-        $creator->nSubs = $nSubs[0]->nSubs;
-        $datos += [
-            'creator' => $creator
-        ];
-
         //Carga el usuario logueado
         $usuarioIniciado = $this->comprobarLogin();
-        if ($usuarioIniciado != null) {
-            $datos += [
+        $datos = [];
+        if ($usuarioIniciado) {
+            $datos = [
                 'usuarioIniciado' => $usuarioIniciado
             ];
+        }
 
-            //Comprueba si el usuario ha dado like al vídeo
-            $hasLiked = DB::select('SELECT COUNT(video_id) AS "liked" FROM video_likes WHERE user_id = :id AND video_id = :videoId', ['id' => $usuarioIniciado->id, 'videoId' => $video->id]);
-            if ($hasLiked[0]->liked == 1) {
-                $hasLiked = true;
-            } else {
-                $hasLiked = false;
-            }
+        if ($video) {
+            $likes = DB::select('SELECT COUNT(video_id) AS "likes" FROM video_likes WHERE video_id = :id', ['id' => $video->id]);
+            $video->likes = $likes[0]->likes;
+            $dislikes = DB::select('SELECT COUNT(video_id) AS "dislikes" FROM video_dislikes WHERE video_id = :id', ['id' => $video->id]);
+            $video->dislikes = $dislikes[0]->dislikes;
+
             $datos += [
-                'hasLiked' => $hasLiked
+                'video' => $video
             ];
 
-            //Comprueba si el usuario ha dado dislike al vídeo
-            $hasDisliked = DB::select('SELECT COUNT(video_id) AS "disliked" FROM video_dislikes WHERE user_id = :id AND video_id = :videoId', ['id' => $usuarioIniciado->id, 'videoId' => $video->id]);
-            if ($hasDisliked[0]->disliked == 1) {
-                $hasDisliked = true;
-            } else {
-                $hasDisliked = false;
-            }
+            //Datos del creador del vídeo
+            $creator = User::where('id', '=', $video->creator_id)->first();
+            $nSubs = DB::select('SELECT COUNT(user_following_id) AS nSubs FROM user_following WHERE user_following_id = ?', [$creator->id]);
+            $creator->nSubs = $nSubs[0]->nSubs;
             $datos += [
-                'hasDisliked' => $hasDisliked
+                'creator' => $creator
             ];
+
+            //Datos del usuario para con el vídeo
+            if ($usuarioIniciado != null) {
+                //Comprueba si el usuario ha dado like al vídeo
+                $hasLiked = DB::select('SELECT COUNT(video_id) AS "liked" FROM video_likes WHERE user_id = :id AND video_id = :videoId', ['id' => $usuarioIniciado->id, 'videoId' => $video->id]);
+                if ($hasLiked[0]->liked == 1) {
+                    $hasLiked = true;
+                } else {
+                    $hasLiked = false;
+                }
+                $datos += [
+                    'hasLiked' => $hasLiked
+                ];
+
+                //Comprueba si el usuario ha dado dislike al vídeo
+                $hasDisliked = DB::select('SELECT COUNT(video_id) AS "disliked" FROM video_dislikes WHERE user_id = :id AND video_id = :videoId', ['id' => $usuarioIniciado->id, 'videoId' => $video->id]);
+                if ($hasDisliked[0]->disliked == 1) {
+                    $hasDisliked = true;
+                } else {
+                    $hasDisliked = false;
+                }
+                $datos += [
+                    'hasDisliked' => $hasDisliked
+                ];
+            }
         }
 
         //Añade 1 visualización al vídeo en cuestión
@@ -400,6 +408,72 @@ class contentController extends Controller
             }
         } else {
             return redirect(url('login'));
+        }
+    }
+
+    /**
+     * Carga los datos de un vídeo siempre y cuando el usuario sea el creador o un administrador
+     */
+    public function aEditarVideo($filename)
+    {
+        $usuarioIniciado = $this->comprobarLogin();
+        $video = Video::where('filename', 'LIKE', $filename)->first();
+        if ($usuarioIniciado && $video && ($usuarioIniciado->id == $video->creator_id || $usuarioIniciado->rol == 1)) {
+            $datos = [
+                'usuarioIniciado' => $usuarioIniciado,
+                'video' => $video
+            ];
+
+            //Carga las etiquetas y las guarda como cadena de texto
+            $tags = DB::select('SELECT name AS tags FROM tags WHERE id IN (SELECT tag_id FROM video_tag WHERE video_id = ?)', [$video->id]);
+            //$tags = $tags[0]->tags;
+            $tagsCadena = '';
+            /*
+            foreach ($tags as $tag) {
+                $tagsCadena += ',' . $tag;
+            }
+            */
+            $datos += [
+                'tags' => $tags
+            ];
+
+            return view('editVideo', $datos);
+        } else {
+            return redirect(url('video/' . $filename));
+        }
+    }
+
+    /**
+     * Edita un vídeo
+     */
+    public function editarVideo(Request $request)
+    {
+        $usuarioIniciado = $this->comprobarLogin();
+        $video = Video::find($request->input('id'));
+        if ($usuarioIniciado && $video && ($usuarioIniciado->id == $video->creator_id || $usuarioIniciado->rol == 1)) {
+            if ($request->input('guardar')) {
+                //Guarda los cambios del vídeo
+                $video->title = $request->input('title');
+                $video->description = $request->input('description');
+                $video->save();
+
+                return redirect(url('video/' . $video->filename));
+            } else if ($request->input('cancelar')) {
+                return redirect(url('video/' . $video->filename));
+            } else if ($request->input('eliminar')) {
+                //Elimina los registros relativos al vídeo en commentaries, video_likes, video_dislikes y video_tag
+                DB::delete('DELETE FROM commentaries WHERE video_id = ?', [$video->id]);
+                DB::delete('DELETE FROM video_likes WHERE video_id = ?', [$video->id]);
+                DB::delete('DELETE FROM video_dislikes WHERE video_id = ?', [$video->id]);
+                DB::delete('DELETE FROM video_tag WHERE video_id = ?', [$video->id]);
+
+                $video->delete();
+                return redirect(url('user/' . $usuarioIniciado->username));
+            } else {
+                return redirect(url('/'));
+            }
+        } else {
+            return redirect()->back();
         }
     }
 
