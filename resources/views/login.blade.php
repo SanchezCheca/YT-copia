@@ -32,8 +32,14 @@
                     <input class="form-control" name="emailOrUsername" type="text" placeholder="Nombre de usuario o correo electrónico">
                     <input class="form-control mt-2" name="pass" type="password" placeholder="Contraseña">
                     <input type="submit" class="btn btn-dark mt-2" name="botonLogin" value="Iniciar sesión">
-                    <p class="d-block mt-2 mb-0">¿No tienes cuenta? <a href="/register">Crear cuenta</a></p>
+                    <p class="d-block mt-2 mb-0">¿No tienes cuenta? <a href="{{url('register')}}">Crear cuenta</a></p>
                   </form>
+
+                  <?php
+                    if (isset($ruta)) {
+                        dd($ruta);
+                    }
+                  ?>
 
             </div>
         </div>

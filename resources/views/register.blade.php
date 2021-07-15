@@ -34,7 +34,7 @@
                     <input class="form-control mt-2" name="correo" type="email" placeholder="Correo electrónico">
                     <input class="form-control mt-2" name="pass" type="password" placeholder="Contraseña">
                     <input type="submit" class="btn btn-dark mt-2" name="botonRegistrar" value="Crear cuenta">
-                    <p class="d-block mt-2 mb-0">¿Ya tienes cuenta? <a href="/login">Iniciar sesión</a></p>
+                    <p class="d-block mt-2 mb-0">¿Ya tienes cuenta? <a href="{{url('login')}}">Iniciar sesión</a></p>
                   </form>
 
 

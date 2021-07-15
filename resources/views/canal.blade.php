@@ -127,6 +127,7 @@
                     About
                 </p>
                 <p class="formateado">{{$user->about}}</p>
+                <hr>
                 <p class="h5 my-1">
                     Estadísticas
                 </p>

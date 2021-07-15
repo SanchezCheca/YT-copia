@@ -32,6 +32,27 @@ class controladorPrincipal extends Controller
         Return view('upload', $datos);
     }
 
+    /**
+     * Si ya ha iniciado sesión, vuelve hacia atrás
+     */
+    public function aLogin(Request $req) {
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado) {
+            return redirect()->back();
+        } else {
+            return view('login');
+        }
+    }
+
+    public function aRegister() {
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado) {
+            return redirect()->back();
+        } else {
+            return view('register');
+        }
+    }
+
     //------------------MÉTODOS PRIVADOS
     private function comprobarLogin() {
         if (session()->has('usuarioIniciado')) {
