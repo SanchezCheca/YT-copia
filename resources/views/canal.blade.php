@@ -168,7 +168,7 @@
     }
     ?>
 
-
+    @include('footer')
 
     @include('scripts')
 

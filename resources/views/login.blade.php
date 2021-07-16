@@ -44,6 +44,7 @@
             </div>
         </div>
 
+        @include('footer')
         @include('scripts')
     </body>
 </html>

@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Route;
 
 //------------PRINCIPAL
 Route::get('/', [controladorPrincipal::class, 'inicio'])->middleware('controlarRutaActual');
-Route::get('inicio', [controladorPrincipal::class, 'inicio'])->middleware('controlarRutaActual');
+Route::get('inicio', function () {
+    return redirect('/');
+});
 //Route::get('upload', [controladorPrincipal::class, 'aUpload']);
 Route::get('login', [controladorPrincipal::class, 'aLogin']);
 Route::get('register', [controladorPrincipal::class, 'aRegister']);

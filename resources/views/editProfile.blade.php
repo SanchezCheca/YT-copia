@@ -89,7 +89,7 @@
     }
     ?>
 
-
+    @include('footer')
 
     @include('scripts')
 

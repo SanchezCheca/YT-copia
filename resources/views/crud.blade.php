@@ -76,6 +76,7 @@
         </div>
     </div>
 
+    @include('footer')
     @include('scripts')
     <script type="text/javascript">
         $(function() {
