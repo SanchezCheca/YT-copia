@@ -22,7 +22,7 @@
 
 
     <?php if (isset($video)) { ?>
-    <div class="row mx-0 px-5 mt-4">
+    <div class="row mx-0 px-5 mt-4 mx-0">
         <div class="col-12 col-lg-8">
             <!-- CONTENIDO DE VÍDEO, TÍTULO Y DESCRIPCIÓN -->
             <div class="row">
@@ -166,6 +166,7 @@
     <?php
     } ?>
 
+    @include('footer')
     <script src="//vjs.zencdn.net/5.4.6/video.min.js"></script>
     @include('scripts')
 </body>

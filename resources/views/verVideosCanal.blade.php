@@ -89,7 +89,7 @@
 
             <div class="col-12">
                 <div class="row my-2">
-
+                    <!-- VÍDEOS DEL CANAL -->
                     <?php
                     if (isset($userVideos) && sizeof($userVideos) > 0) {
                         ?>
@@ -155,7 +155,7 @@
     ?>
 
 
-
+    @include('footer')
     @include('scripts')
 
     <script>

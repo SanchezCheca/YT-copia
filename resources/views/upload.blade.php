@@ -97,6 +97,7 @@
         </div>
     </div>
 
+    @include('footer')
     <script type="text/javascript">
         var SITEURL = "{{ URL('/') }}";
         $(function() {

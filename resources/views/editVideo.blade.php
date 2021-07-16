@@ -68,6 +68,7 @@
     <?php
     } ?>
 
+    @include('footer')
     <script src="//vjs.zencdn.net/5.4.6/video.min.js"></script>
     @include('scripts')
 
