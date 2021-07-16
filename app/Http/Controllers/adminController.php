@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -50,7 +51,9 @@ class adminController extends Controller
                     'mensaje' => $mensaje
                 ];
 
-                //Elimina los registros relativos al usuario en user_following, video_likes, video_dislikes y commentaries
+                //Elimina los registros relativos al usuario en videos, video_tag, user_following, video_likes, video_dislikes y commentaries
+                DB::delete('DELETE FROM video_tag WHERE video_id IN (SELECT id FROM videos WHERE creator_id = ?)', [$usuario->id]);
+                Video::where('creator_id','=',$usuario->id)->delete();
                 DB::delete('DELETE FROM user_following WHERE user_id = ? OR user_following_id = ?', [$usuario->id, $usuario->id]);
                 DB::delete('DELETE FROM video_likes WHERE user_id = ?', [$usuario->id]);
                 DB::delete('DELETE FROM video_dislikes WHERE user_id = ?', [$usuario->id]);

@@ -72,15 +72,13 @@
     @include('scripts')
 
     <script type="text/javascript">
-        $(function () {
-            $("#eliminar").click(function () {
+        $(function() {
+            $("#eliminar").click(function() {
                 var result = confirm("¿Estás seguro?\nEsta acción no se puede deshacer");
 
                 if (result == true) {
                     return true;
-                }
-
-                else {
+                } else {
                     return false;
                 }
             });
