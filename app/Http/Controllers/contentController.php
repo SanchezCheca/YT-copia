@@ -223,17 +223,19 @@ class contentController extends Controller
         $tagsArray = explode(',', $tagsSinEspacios);
         foreach ($tagsArray as $tag) {
             $tagActual = Tag::where('name', 'LIKE', $tag)->first();
-            if ($tagActual == null) {
-                //La etiqueta introducida no existe en BD, se crea
-                $tagActual = Tag::create([
-                    'name' => $tag
+            if ($tag != '' && $tag != null) {
+                if ($tagActual == null) {
+                    //La etiqueta introducida no existe en BD, se crea
+                    $tagActual = Tag::create([
+                        'name' => $tag
+                    ]);
+                }
+                //Se asigna la etiqueta introducida a la publicación
+                DB::table('video_tag')->insert([
+                    'video_id' => $video->id,
+                    'tag_id' => $tagActual->id
                 ]);
             }
-            //Se asigna la etiqueta introducida a la publicación
-            DB::table('video_tag')->insert([
-                'video_id' => $video->id,
-                'tag_id' => $tagActual->id
-            ]);
         }
 
         return response()->json(['success' => $video->filename]);
@@ -426,15 +428,15 @@ class contentController extends Controller
 
             //Carga las etiquetas y las guarda como cadena de texto
             $tags = DB::select('SELECT name AS tags FROM tags WHERE id IN (SELECT tag_id FROM video_tag WHERE video_id = ?)', [$video->id]);
-            //$tags = $tags[0]->tags;
             $tagsCadena = '';
-            /*
-            foreach ($tags as $tag) {
-                $tagsCadena += ',' . $tag;
+            if (sizeof($tags) > 0) {
+                $tagsCadena = $tags[0]->tags . ', ';
+                for ($i = 1; $i < sizeof($tags); $i++) {
+                    $tagsCadena = $tagsCadena . $tags[$i]->tags . ', ';
+                }
             }
-            */
             $datos += [
-                'tags' => $tags
+                'tags' => $tagsCadena
             ];
 
             return view('editVideo', $datos);
@@ -456,6 +458,30 @@ class contentController extends Controller
                 $video->title = $request->input('title');
                 $video->description = $request->input('description');
                 $video->save();
+
+                //Elimina las etiquetas y las vuelve a escribir
+                DB::delete('DELETE FROM video_tag WHERE video_id = ?', [$video->id]);
+
+                //Etiquetas
+                $tags = $request->input('tags');
+                $tagsSinEspacios = str_replace(' ', '', $tags);
+                $tagsArray = explode(',', $tagsSinEspacios);
+                foreach ($tagsArray as $tag) {
+                    $tagActual = Tag::where('name', 'LIKE', $tag)->first();
+                    if ($tag != '' && $tag != null) {
+                        if ($tagActual == null) {
+                            //La etiqueta introducida no existe en BD, se crea
+                            $tagActual = Tag::create([
+                                'name' => $tag
+                            ]);
+                        }
+                        //Se asigna la etiqueta introducida a la publicación
+                        DB::table('video_tag')->insert([
+                            'video_id' => $video->id,
+                            'tag_id' => $tagActual->id
+                        ]);
+                    }
+                }
 
                 return redirect(url('video/' . $video->filename));
             } else if ($request->input('cancelar')) {
