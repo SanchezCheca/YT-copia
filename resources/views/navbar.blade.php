@@ -30,6 +30,7 @@
                                 ?>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{url('crud')}}">Zona ADMIN</a>
+                                <a class="dropdown-item" href="{{url('verContactos')}}">Ver contactos</a>
                                 <?php
                             }
                             ?>

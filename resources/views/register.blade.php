@@ -14,7 +14,9 @@
 
         <div class="row mx-0">
             <div class="col-12 col-md-6 col-lg-4 mx-auto p-3 text-center">
-
+                <p class="h3 mx-auto">
+                    Crear cuenta
+                </p>
                 <?php
                 if (isset($mensaje) && isset($exito)) {
                     if ($exito) {
@@ -31,9 +33,9 @@
 
                 <form class="border rounded p-3" action="register" name="registerForm" method="POST">
                     {{ csrf_field() }}
-                    <input class="form-control" name="username" type="text" placeholder="Nombre de usuario">
-                    <input class="form-control mt-2" name="correo" type="email" placeholder="Correo electrónico">
-                    <input class="form-control mt-2" name="pass" type="password" placeholder="Contraseña">
+                    <input class="form-control" name="username" type="text" placeholder="Nombre de usuario" required>
+                    <input class="form-control mt-2" name="correo" type="email" placeholder="Correo electrónico" required>
+                    <input class="form-control mt-2" name="pass" type="password" placeholder="Contraseña" required minlength="6">
                     <input type="submit" class="btn btn-dark mt-2" name="botonRegistrar" value="Crear cuenta">
                     <p class="d-block mt-2 mb-0">¿Ya tienes cuenta? <a href="{{url('login')}}">Iniciar sesión</a></p>
                   </form>

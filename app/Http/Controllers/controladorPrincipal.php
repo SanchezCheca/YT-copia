@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contacto;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -162,6 +163,45 @@ class controladorPrincipal extends Controller
 
         return view('ranking', $datos);
     }
+
+    /**
+     * Lleva a la vista de contacto
+     */
+     public function aContacto() {
+         $datos = [];
+         $usuarioIniciado = $this->comprobarLogin();
+         if ($usuarioIniciado) {
+            $datos += [
+                'usuarioIniciado' => $usuarioIniciado
+            ];
+         }
+         return view('contacto', $datos);
+     }
+
+     /**
+      * Guarda un contacto
+      */
+     public function procesarContacto(Request $req) {
+        $datos = [];
+         $usuarioIniciado = $this->comprobarLogin();
+         if ($usuarioIniciado) {
+            $datos += [
+                'usuarioIniciado' => $usuarioIniciado
+            ];
+         }
+
+        $contacto = new Contacto();
+        $contacto->name = $req->input('name');
+        $contacto->email = $req->input('email');
+        $contacto->message = $req->input('message');
+        $contacto->save();
+
+        $datos += [
+            'mensaje' => '¡Gracias!'
+        ];
+
+        return view('contacto', $datos);
+     }
 
     //------------------MÉTODOS PRIVADOS
     private function comprobarLogin()

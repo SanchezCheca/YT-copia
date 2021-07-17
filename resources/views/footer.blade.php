@@ -3,7 +3,7 @@
         <div class="col-12 col-md-4 mx-auto">
             <h4>YT - Copia</h4>
             <p>
-                <a href="#" class="text-white"><i class="fas fa-link"></i> Contacto</a>
+                <a href="{{url('contacto')}}" class="text-white"><i class="fas fa-link"></i> Contacto</a>
             </p>
         </div>
     </div>
