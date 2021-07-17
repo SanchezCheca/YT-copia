@@ -14,6 +14,7 @@ Route::get('inicio', function () {
 //Route::get('upload', [controladorPrincipal::class, 'aUpload']);
 Route::get('login', [controladorPrincipal::class, 'aLogin']);
 Route::get('register', [controladorPrincipal::class, 'aRegister']);
+Route::get('ranking', [controladorPrincipal::class, 'aRanking'])->middleware('controlarRutaActual');
 
 //------------CONTENIDO
 Route::get('user/{username}', [contentController::class, 'verCanal'])->middleware('controlarRutaActual');

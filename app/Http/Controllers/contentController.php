@@ -584,9 +584,9 @@ class contentController extends Controller
                     $videosConCreatorUsername[] = $video;
                 }
 
-
+                $videosConCreatorUsername = array_slice($videosConCreatorUsername, 0, 20); // Máximo de 20 resultados
                 $datos += [
-                    'videos' => $resultados
+                    'videos' => $videosConCreatorUsername
                 ];
                 return view('searchResult', $datos);
             }

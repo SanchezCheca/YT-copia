@@ -24,7 +24,7 @@
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink2">
                             <a class="dropdown-item" href="{{url('user/' . $usuarioIniciado->username)}}"><i class="fas fa-video"></i> Mi canal</a>
                             <a class="dropdown-item" href="{{url('mySubs')}}"><i class="fas fa-film"></i> Mis suscripciones</a>
-                            <a class="dropdown-item" href="#"><i class="fas fa-trophy"></i> Ranking</a>
+                            <a class="dropdown-item" href="{{url('ranking')}}"><i class="fas fa-trophy"></i> Ranking</a>
                             <?php
                             if ($usuarioIniciado->rol == 1) {
                                 ?>
