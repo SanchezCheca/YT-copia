@@ -15,7 +15,7 @@
 <body>
     @include('navbar')
 
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <table class="table">
@@ -23,7 +23,7 @@
                       <tr>
                         <th scope="col">Nombre</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Fecha</th>
+                        <th scope="col">Fecha (-3h)</th>
                         <th scope="col">Mensaje</th>
                       </tr>
                     </thead>

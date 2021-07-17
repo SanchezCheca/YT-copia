@@ -50,9 +50,19 @@
         <!-- CUERPO DEL CANAL -->
         <div class="row bg-light pb-3">
             <div class="col-12 text-center">
+                <?php
+                //Si hay mensaje es que ha ocurrido algún error
+                if (isset($mensaje)) {
+                    ?>
+                    <p class="mx-auto p-2 bg-danger rounded mt-2">
+                        {{$mensaje}}
+                    </p>
+                    <?php
+                }
+                ?>
                 <div class="form-group mt-4">
                     <label for="descripcion" class="text-left w-100">Descripción</label>
-                    <textarea class="form-control" name="descripcion" rows="3" placeholder="Di algo sobre ti" id="descripcion">{{$usuarioIniciado->about}}</textarea>
+                    <textarea class="form-control" name="descripcion" rows="6" placeholder="Di algo sobre ti" id="descripcion" maxlength="70">{{$usuarioIniciado->about}}</textarea>
                 </div>
 
                 <input type="submit" class="btn btn-success" value="Guardar cambios">

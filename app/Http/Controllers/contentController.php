@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commentary;
 use App\Models\Dislike;
 use App\Models\Like;
 use App\Models\Tag;
@@ -299,6 +300,21 @@ class contentController extends Controller
                     'hasDisliked' => $hasDisliked
                 ];
             }
+
+            //Carga los comentarios del vídeo
+            $commentaries = Commentary::where('video_id', '=', $video->id)->orderBydesc('created_at')->take(20)->get();
+            $nCommentaries = Commentary::where('video_id','=',$video->id)->count();
+            $commentariesConUserData = [];
+            foreach ($commentaries as $commentary) {
+                $creator = User::where('id','=',$commentary->user_id)->first();
+                $commentary->creatorUsername = $creator->username;
+                $commentary->creatorImageUrl = $creator->publicProfileImageUrl;
+                $commentariesConUserData[] = $commentary;
+            }
+            $datos += [
+                'commentaries' => $commentariesConUserData,
+                'nCommentaries' => $nCommentaries
+            ];
         }
 
         //Añade 1 visualización al vídeo en cuestión
@@ -320,6 +336,31 @@ class contentController extends Controller
         ];
 
         return view('video', $datos);
+    }
+
+    /**
+     * Añade un comentario
+     */
+    public function commentVideo(Request $req) {
+        $datos = [];
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado) {
+            $datos += [
+                'usuarioIniciado' => $usuarioIniciado
+            ];
+            $video = Video::find($req->input('video_id'));
+            $commentaryInput = $req->input('commentary');
+
+            $commentary = new Commentary();
+            $commentary->video_id = $video->id;
+            $commentary->user_id = $usuarioIniciado->id;
+            $commentary->commentary = $commentaryInput;
+            $commentary->save();
+
+            return redirect(url('video/' . $video->filename));
+        } else {
+            return redirect(url('login'));
+        }
     }
 
     //Like a un video
