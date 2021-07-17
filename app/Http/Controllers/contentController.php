@@ -503,6 +503,129 @@ class contentController extends Controller
         }
     }
 
+    /**
+     * Redirige a una ruta del tipo /search/{searchTerm}
+     */
+    public function processSearch(Request $request)
+    {
+        $searchTerm = $request->input('searchTerm');
+        return redirect(url('search/' . $searchTerm));
+    }
+
+    /**
+     * Devuelve los resultados de una búsqueda vacía
+     */
+    public function searchEmpty()
+    {
+        $datos = [];
+        $usuarioIniciado = $this->comprobarLogin();
+        $datos += [
+            'usuarioIniciado' => $usuarioIniciado
+        ];
+        $videos = Video::take(20)->orderByDesc('created_at')->get();
+        //Añade el cretorUsername a los vídeos
+        $videosConCreatorUsername = [];
+        foreach ($videos as $video) {
+            $creator = User::find($video->creator_id);
+            $video->creatorUsername = $creator->username;
+            $video->creatorImageUrl = $creator->publicProfileImageUrl;
+            $videosConCreatorUsername[] = $video;
+        }
+        $datos += [
+            'videos' => $videosConCreatorUsername
+        ];
+        return view('searchResult', $datos);
+    }
+
+    /**
+     * Devuelve los resultados de una búsqueda
+     */
+    public function search($searchTerm)
+    {
+        $datos = [];
+        $usuarioIniciado = $this->comprobarLogin();
+        $datos += [
+            'usuarioIniciado' => $usuarioIniciado,
+            'searchTerm' => $searchTerm
+        ];
+
+        if ($searchTerm && $searchTerm != '') {
+            if ($searchTerm == ':topVideos') {
+                //VÍDEOS MÁS VISTOS
+                $videos = Video::take(20)->orderByDesc('views')->get();
+
+                //Añade el cretorUsername y la imagen de perfil del creador a los vídeos
+                $videosConCreatorUsername = [];
+                foreach ($videos as $video) {
+                    $creator = User::find($video->creator_id);
+                    $video->creatorUsername = $creator->username;
+                    $video->creatorImageUrl = $creator->publicProfileImageUrl;
+                    $videosConCreatorUsername[] = $video;
+                }
+                $datos += [
+                    'videos' => $videos
+                ];
+                return view('searchResult', $datos);
+            } else {
+                //BÚSQUEDA GENÉRICA
+                //Coincidencia parcial con título
+                $resultados = DB::table('videos')->where('title', 'LIKE', '%' . $searchTerm . '%')->orderByDesc('created_at')->get()->all();
+                //Coincidencia directa con etiquetas
+                $resultados += DB::select('SELECT * FROM videos WHERE id IN (SELECT video_id FROM video_tag WHERE tag_id = (SELECT id FROM tags WHERE NAME LIKE ?) ORDER BY "created_at" DESC)', [$searchTerm]);
+                //Coincidencia con canal
+                $resultados += DB::select('SELECT * FROM videos WHERE creator_id IN (SELECT id FROM users WHERE username LIKE ?) ORDER BY "created_at" DESC', [$searchTerm]);
+
+                //Añade el cretorUsername y la imagen de perfil del creador a los vídeos
+                $videosConCreatorUsername = [];
+                foreach ($resultados as $video) {
+                    $creator = User::find($video->creator_id);
+                    $video->creatorUsername = $creator->username;
+                    $video->creatorImageUrl = $creator->publicProfileImageUrl;
+                    $videosConCreatorUsername[] = $video;
+                }
+
+
+                $datos += [
+                    'videos' => $resultados
+                ];
+                return view('searchResult', $datos);
+            }
+        } else {
+            //Error raro
+            return redirect(url('/'));
+        }
+    }
+
+    /**
+     * Recupera los canales a los que se ha suscrito un usuario
+     */
+    public function mySubs()
+    {
+        $datos = [];
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado) {
+            $datos += [
+                'usuarioIniciado' => $usuarioIniciado
+            ];
+
+            $usersSub = DB::select('SELECT * FROM users WHERE id IN (SELECT user_following_id FROM user_following WHERE user_id = ?)', [$usuarioIniciado->id]);
+            //Añade el nº de suscriptores a cada objeto
+            $subsConSubs = [];
+            foreach ($usersSub as $sub) {
+                $nSubs = DB::select('SELECT COUNT(user_following_id) AS subs FROM user_following WHERE user_following_id = ?', [$sub->id]);
+                $sub->nSubs = $nSubs[0]->subs;
+                $subsConSubs[] = $sub;
+            }
+            $datos += [
+                'channels' => $subsConSubs
+            ];
+            return view('mySubs', $datos);
+        } else {
+            //No se ha suscrito, no tiene sentido esta función
+            return redirect()->back();
+        }
+    }
+
     public function videoExample()
     {
         $usuarioIniciado = $this->comprobarLogin();

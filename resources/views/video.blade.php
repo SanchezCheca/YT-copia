@@ -139,7 +139,7 @@
                 <div class="col-12 mt-2">
                     <a href="{{ url('video/' . $videoRec->filename) }}"><img
                             src="{{ 'https://vdm2.s3.eu-west-3.amazonaws.com/thumbnails/' . $videoRec->thumbnailFilename }}"
-                            width="120vh" class="float-left mr-2"></a>
+                            width="200vh" class="float-left mr-2"></a>
                     <p class="my-0 tituloVideoRecomendado text-truncate">
                         <a href="{{ url('video/' . $videoRec->filename) }}">{{ $videoRec->title }}</a>
                     </p>

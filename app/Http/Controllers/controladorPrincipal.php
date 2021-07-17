@@ -27,7 +27,9 @@ class controladorPrincipal extends Controller
         $ultimosVideos = Video::take(12)->orderByDesc('created_at')->get();
         $ultimosVideosConCreatorUsername = [];
         foreach ($ultimosVideos as $video) {    //Añade el nombre del creador a cada vídeo
-            $video->creatorUsername = User::find($video->creator_id)->username;
+            $creator = User::find($video->creator_id);
+            $video->creatorUsername = $creator->username;
+            $video->creatorImageUrl = $creator->publicProfileImageUrl;
             $ultimosVideosConCreatorUsername[] = $video;
         }
         $datos += [
@@ -38,7 +40,9 @@ class controladorPrincipal extends Controller
         $videosMasVistos = Video::take(6)->orderByDesc('views')->get();
         $videosMasVistosConCreatorUsername = [];
         foreach ($videosMasVistos as $video) {
-            $video->creatorUsername = User::find($video->creator_id)->username;
+            $creator = User::find($video->creator_id);
+            $video->creatorUsername = $creator->username;
+            $video->creatorImageUrl = $creator->publicProfileImageUrl;
             $videosMasVistosConCreatorUsername[] = $video;
         }
         $datos += [
@@ -51,7 +55,9 @@ class controladorPrincipal extends Controller
             if (sizeof($videosSuscripciones) > 0) {
                 $videosSuscripcionesConCreatorUsername = [];
                 foreach ($videosSuscripciones as $video) {    //Añade el nombre del creador a cada vídeo
-                    $video->creatorUsername = User::find($video->creator_id)->username;
+                    $creator = User::find($video->creator_id);
+                    $video->creatorUsername = $creator->username;
+                    $video->creatorImageUrl = $creator->publicProfileImageUrl;
                     $videosSuscripcionesConCreatorUsername[] = $video;
                 }
                 $datos += [

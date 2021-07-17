@@ -17,8 +17,8 @@
         <?php
         if (isset($ultimosVideos)) {
             ?>
-        <p class="h4 mt-2">
-            Últimos vídeos <a class="textoMenor" href="#">Ver todo</a>
+        <p class="h3 mt-2">
+            Últimos vídeos <a class="textoMenor" href="{{url('search')}}">Ver todo</a>
         </p>
         <!-- ÚLTIMOS VÍDEOS -->
         <div class="row">
@@ -33,10 +33,10 @@
                     <a href="{{ url('video/' . $videoRec->filename) }}">{{ $videoRec->title }}</a>
                 </p>
                 <p class="my-0 canalVideoRecomendado text-truncate">
-                    <a href="{{ url('user/' . $videoRec->creatorUsername) }}">{{ $videoRec->creatorUsername }}</a>
+                    <a href="{{ url('user/' . $videoRec->creatorUsername) }}"><img class="perfilResultadoBusqueda" src="{{url($videoRec->creatorImageUrl)}}"> {{ $videoRec->creatorUsername }}</a>
                 </p>
-                <p class="my-0 viewsVideoRecomendado">
-                    {{ $videoRec->views }} visualizaciones
+                <p class="my-0 viewsVideoRecomendado ml-4">
+                    {{ number_format($videoRec->views, 0, ',', '.') }} visualizaciones
                 </p>
             </div>
             <?php
@@ -52,8 +52,8 @@
         <?php
         if (isset($videosSuscripciones)) {
             ?>
-        <p class="h4 mt-4">
-            De tus suscripciones <a class="textoMenor" href="#">Ver todo</a>
+        <p class="h3 mt-4">
+            De tus suscripciones <a class="textoMenor" href="{{url('mySubs')}}">Ver suscripciones</a>
         </p>
         <div class="row">
             <?php
@@ -67,10 +67,10 @@
                     <a href="{{ url('video/' . $videoRec->filename) }}">{{ $videoRec->title }}</a>
                 </p>
                 <p class="my-0 canalVideoRecomendado text-truncate">
-                    <a href="{{ url('user/' . $videoRec->creatorUsername) }}">{{ $videoRec->creatorUsername }}</a>
+                    <a href="{{ url('user/' . $videoRec->creatorUsername) }}"><img class="perfilResultadoBusqueda" src="{{url($videoRec->creatorImageUrl)}}"> {{ $videoRec->creatorUsername }}</a>
                 </p>
-                <p class="my-0 viewsVideoRecomendado">
-                    {{ $videoRec->views }} visualizaciones
+                <p class="my-0 viewsVideoRecomendado ml-4">
+                    {{ number_format($videoRec->views, 0, ',', '.') }} visualizaciones
                 </p>
             </div>
             <?php
@@ -85,8 +85,8 @@
         <?php
         if (isset($videosMasVistos)) {
             ?>
-        <p class="h4 mt-4">
-            Vídeos más vistos <a class="textoMenor" href="#">Ver todo</a>
+        <p class="h3 mt-4">
+            Vídeos más vistos <a class="textoMenor" href="{{url('search/:topVideos')}}">Ver todo</a>
         </p>
         <div class="row">
             <?php
@@ -100,10 +100,10 @@
                     <a href="{{ url('video/' . $videoRec->filename) }}">{{ $videoRec->title }}</a>
                 </p>
                 <p class="my-0 canalVideoRecomendado text-truncate">
-                    <a href="{{ url('user/' . $videoRec->creatorUsername) }}">{{ $videoRec->creatorUsername }}</a>
+                    <a href="{{ url('user/' . $videoRec->creatorUsername) }}"><img class="perfilResultadoBusqueda" src="{{url($videoRec->creatorImageUrl)}}"> {{ $videoRec->creatorUsername }}</a>
                 </p>
-                <p class="my-0 viewsVideoRecomendado">
-                    {{ $videoRec->views }} visualizaciones
+                <p class="my-0 viewsVideoRecomendado ml-4">
+                    {{ number_format($videoRec->views, 0, ',', '.') }} visualizaciones
                 </p>
             </div>
             <?php
