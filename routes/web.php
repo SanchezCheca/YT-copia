@@ -36,6 +36,7 @@ Route::get('search/{searchTerm}', [contentController::class, 'search'])->middlew
 Route::get('search', [contentController::class, 'searchEmpty'])->middleware('controlarRutaActual');
 Route::post('processSearch', [contentController::class, 'processSearch']);
 Route::get('mySubs', [contentController::class, 'mySubs'])->middleware('controlarRutaActual');
+Route::post('comentar', [contentController::class, 'commentVideo']);
 
 //-------------REGISTRO Y LOGIN
 Route::post('register', [loginController::class, 'registrarCuenta']);
