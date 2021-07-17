@@ -18,12 +18,20 @@
         <div class="row">
             <?php
                 if (isset($videos) && sizeof($videos) > 0) {
-                    //Título para el caso de que sea el top de vídeos o los últimos vídeos subidos
+                    //Título
                     if (isset($searchTerm) && $searchTerm == ':topVideos') {
                         ?>
                         <div class="col-12 mt-2">
                             <p class="h4">
                                 Vídeos más vistos
+                            </p>
+                        </div>
+                        <?php
+                    } else if (isset($searchTerm)) {
+                        ?>
+                        <div class="col-12 mt-2">
+                            <p class="h4">
+                                Resultados de la búsqueda: {{$searchTerm}}
                             </p>
                         </div>
                         <?php

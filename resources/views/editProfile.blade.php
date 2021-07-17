@@ -7,8 +7,8 @@
 
     <title>
         <?php
-        if (isset($user)) {
-            echo $user->username . ' ';
+        if (isset($usuarioIniciado)) {
+            echo $usuarioIniciado->username . ' ';
         } else {
             echo 'Canal que no existe ';
         }
