@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contacto;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -83,6 +84,26 @@ class adminController extends Controller
                 ];
                 return view('crud', $datos);
             }
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    /**
+     * Recupera todos los contactos de la bd
+     */
+    public function verContactos() {
+        $datos = [];
+        $usuarioIniciado = $this->comprobarLogin();
+        $datos += [
+            'usuarioIniciado' => $usuarioIniciado
+        ];
+        if ($usuarioIniciado && $usuarioIniciado->rol == 1) {
+            $contactos = Contacto::orderByDesc('created_at')->get();
+            $datos += [
+                'contactos' => $contactos
+            ];
+            return view('verContactos', $datos);
         } else {
             return redirect()->back();
         }

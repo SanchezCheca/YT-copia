@@ -15,6 +15,8 @@ Route::get('inicio', function () {
 Route::get('login', [controladorPrincipal::class, 'aLogin']);
 Route::get('register', [controladorPrincipal::class, 'aRegister']);
 Route::get('ranking', [controladorPrincipal::class, 'aRanking'])->middleware('controlarRutaActual');
+Route::get('contacto', [controladorPrincipal::class, 'aContacto'])->middleware('controlarRutaActual');
+Route::post('contacto', [controladorPrincipal::class, 'procesarContacto']);
 
 //------------CONTENIDO
 Route::get('user/{username}', [contentController::class, 'verCanal'])->middleware('controlarRutaActual');
@@ -43,3 +45,4 @@ Route::get('cerrarSesion', [loginController::class, 'cerrarSesion']);
 //-------------ADMINISTRACIÓN
 Route::get('crud', [adminController::class, 'aCrud']);
 Route::post('editUserCRUD', [adminController::class, 'editUserCRUD']);
+Route::get('verContactos', [adminController::class, 'verContactos']);
