@@ -5,8 +5,9 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <form class="form-inline mx-auto">
-        <input class="form-control mr-0" type="search" placeholder="Search" aria-label="Search">
+      <form class="form-inline mx-auto" action="{{url('processSearch')}}" method="POST">
+        @csrf
+        <input class="form-control mr-0" type="search" placeholder="Search" name="searchTerm" aria-label="Search" <?php if (isset($searchTerm)){echo 'value="' . $searchTerm . '"';}?>>
         <button class="btn btn-outline-dark ml-0 botonBuscar" type="submit"><i class="fas fa-search"></i></button>
       </form>
 
@@ -22,8 +23,8 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink2">
                             <a class="dropdown-item" href="{{url('user/' . $usuarioIniciado->username)}}"><i class="fas fa-video"></i> Mi canal</a>
+                            <a class="dropdown-item" href="{{url('mySubs')}}"><i class="fas fa-film"></i> Mis suscripciones</a>
                             <a class="dropdown-item" href="#"><i class="fas fa-trophy"></i> Ranking</a>
-
                             <?php
                             if ($usuarioIniciado->rol == 1) {
                                 ?>

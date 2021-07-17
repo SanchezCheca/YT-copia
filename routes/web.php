@@ -29,6 +29,10 @@ Route::get('editProfile', [contentController::class, 'aEditProfile']);
 Route::post('editProfile', [contentController::class, 'editProfile']);
 Route::get('video/{filename}/edit', [contentController::class, 'aEditarVideo']);
 Route::post('editVideo', [contentController::class, 'editarVideo']);
+Route::get('search/{searchTerm}', [contentController::class, 'search'])->middleware('controlarRutaActual');
+Route::get('search', [contentController::class, 'searchEmpty'])->middleware('controlarRutaActual');
+Route::post('processSearch', [contentController::class, 'processSearch']);
+Route::get('mySubs', [contentController::class, 'mySubs'])->middleware('controlarRutaActual');
 
 //-------------REGISTRO Y LOGIN
 Route::post('register', [loginController::class, 'registrarCuenta']);

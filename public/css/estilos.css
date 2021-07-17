@@ -20,9 +20,13 @@
         width: 100%;
     }
 
-    .videosCanal {
+    .imagenResultadoBusqueda {
         width: 100% !important;
+        float: none !important;
     }
+}
+.videosCanal {
+    width: 100% !important;
 }
 
 /** GENERAL Y FOOTER **/
@@ -85,4 +89,19 @@ footer {
 
 .textoMayor {
     font-size: 1.2em !important;
+}
+
+/** RESULTADO DE BÚSQUEDA **/
+.perfilResultadoBusqueda {
+    height: 1.5em;
+    width: 1.5em;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.perfilMisSuscripciones {
+    height: 6em;
+    width: 6em;
+    object-fit: cover;
+    border-radius: 50%;
 }
