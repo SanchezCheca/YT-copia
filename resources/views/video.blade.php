@@ -201,7 +201,8 @@
         El vídeo no se encuentra, <a href="{{ url('/') }}">volver a inicio.</a>
     </p>
     <?php
-    } ?>
+    }
+    ?>
 
     @include('footer')
     <script src="//vjs.zencdn.net/5.4.6/video.min.js"></script>

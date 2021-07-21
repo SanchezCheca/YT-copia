@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contacto;
+use App\Models\Notification;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -109,11 +110,65 @@ class adminController extends Controller
         }
     }
 
+    /**
+     * Va a crear notificación
+     */
+    public function aCrearNotificacion() {
+        $datos = [];
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado && $usuarioIniciado->rol == 1) {
+            $datos += [
+                'usuarioIniciado' => $usuarioIniciado
+            ];
+            return view('crearNotificacion', $datos);
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    /**
+     * Crea una notificación
+     */
+    public function crearNotificacion(Request $req) {
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado && $usuarioIniciado->rol == 1) {
+            $user_id = $req->input('user_id');
+            $title = $req->input('title');
+            $content = $req->input('content');
+
+            $notificacion = new Notification();
+            $notificacion->user_id = $user_id;
+            $notificacion->title = $title;
+            $notificacion->content = $content;
+            $notificacion->save();
+
+            $datos = [
+                'usuarioIniciado' => $usuarioIniciado,
+                'mensaje' => 'CORRECTO'
+            ];
+            return view('crearNotificacion', $datos);
+        } else {
+            return redirect()->back();
+        }
+    }
+
     //------------------MÉTODOS PRIVADOS
     private function comprobarLogin()
     {
         if (session()->has('usuarioIniciado')) {
-            return session()->get('usuarioIniciado');
+            $usuario = session()->get('usuarioIniciado');
+            $notificaciones = Notification::where('user_id','=',$usuario->id)->get();
+            $usuario->notificaciones = $notificaciones;
+
+            //Comprueba si tiene notificaciones sin leer
+            $notifSinLeer = Notification::where('user_id','=',$usuario->id)->where('leido','=',0)->get();
+            if (sizeof($notifSinLeer) > 0) {
+                $usuario->tieneNotifSinLeer = true;
+            } else {
+                $usuario->tieneNotifSinLeer = false;
+            }
+
+            return $usuario;
         } else {
             return null;
         }

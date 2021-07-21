@@ -18,6 +18,19 @@
                     <li class="nav-item my-auto mr-2 botonSubir">
                         <a href="{{url('upload')}}" class="my-auto text-dark"><i class="fas fa-upload"></i> Subir</a>
                     </li>
+                    <li class="nav-item mx-2 mt-2">
+                        <a href="{{url('notificaciones')}}" class="my-auto text-dark"><i class="far fa-bell"></i>
+                            <?php
+                            if ($usuarioIniciado->tieneNotifSinLeer == true) {
+                                ?>
+                                <div class="hayNotificaciones"></div>
+                                <?php
+                            }
+                            ?>
+
+                        </a>
+
+                    </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{url($usuarioIniciado->publicProfileImageUrl)}}" class="perfilRedondo" alt="Perfil">
                         </a>
@@ -31,6 +44,7 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{url('crud')}}">Zona ADMIN</a>
                                 <a class="dropdown-item" href="{{url('verContactos')}}">Ver contactos</a>
+                                <a class="dropdown-item" href="{{url('crearNotificacion')}}">Crear notificación</a>
                                 <?php
                             }
                             ?>

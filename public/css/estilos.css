@@ -45,6 +45,15 @@ footer {
     color: white;
 }
 
+.hayNotificaciones {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 0.2em;
+}
+
 /** PÁGINA PRINCIPAL **/
 .videosPrincipal {
     width: 100% !important;
