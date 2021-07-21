@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Commentary;
 use App\Models\Dislike;
 use App\Models\Like;
+use App\Models\Notification;
 use App\Models\Tag;
 use App\Models\User;
 use App\Models\Video;
@@ -303,10 +304,10 @@ class contentController extends Controller
 
             //Carga los comentarios del vídeo
             $commentaries = Commentary::where('video_id', '=', $video->id)->orderBydesc('created_at')->take(20)->get();
-            $nCommentaries = Commentary::where('video_id','=',$video->id)->count();
+            $nCommentaries = Commentary::where('video_id', '=', $video->id)->count();
             $commentariesConUserData = [];
             foreach ($commentaries as $commentary) {
-                $creator = User::where('id','=',$commentary->user_id)->first();
+                $creator = User::where('id', '=', $commentary->user_id)->first();
                 $commentary->creatorUsername = $creator->username;
                 $commentary->creatorImageUrl = $creator->publicProfileImageUrl;
                 $commentariesConUserData[] = $commentary;
@@ -315,25 +316,63 @@ class contentController extends Controller
                 'commentaries' => $commentariesConUserData,
                 'nCommentaries' => $nCommentaries
             ];
-        }
 
-        //Añade 1 visualización al vídeo en cuestión
-        if ($video) {
+            //Añade 1 visualización al vídeo en cuestión
             $video->views++;
             $video->save();
-        }
 
-        //Carga los vídeos recomendados (con un atributo extra para el nombre de usuario del creador)
-        $videosRecomendados = Video::take(10)->orderByDesc('created_at')->get();
-        $videosRecConNombre = [];
-        foreach ($videosRecomendados as $videoRec) {
-            $creador = User::find($videoRec->creator_id);
-            $videoRec['creatorUsername'] = $creador->username;
-            $videosRecConNombre[] = $videoRec;
+
+            //-----Carga los vídeos recomendados
+            //Selecciona todos los vídeos que tienen cualquier etiqueta en común
+            $videosConEtiquetaComun = DB::select('SELECT * FROM videos WHERE id IN (SELECT video_id FROM video_tag WHERE tag_id IN (SELECT tag_id FROM video_tag WHERE video_id = ?)) LIMIT 11', [$video->id]);
+            //Elimina el propio vídeo que se está viendo
+            $videosSinElPropio = [];
+            foreach ($videosConEtiquetaComun as $videoAct) {
+                if ($videoAct->id != $video->id) {
+                    $videosSinElPropio[] = $videoAct;
+                }
+            }
+            $videosConEtiquetaComun = $videosSinElPropio;
+
+            //Si hay menos de 10 vídeos se recuperan más
+            $ultimosVideos = [];
+            if (sizeof($videosConEtiquetaComun) <= 10) {
+                //Se necesitan más vídeos recomendados
+                $ultimosVideos = Video::take(11 - sizeof($videosConEtiquetaComun))->inRandomOrder()->get();
+
+                //En caso de que se haya vuelto a recoger el propio vídeo se vuelve a retirar. Si no, se retira el último
+                $ultimosVideosSinActual = [];
+                $retirado = false;
+                foreach ($ultimosVideos as $i => $videoAct) {
+                    if (!$retirado && ($i == (sizeof($ultimosVideos) - 1) || $videoAct->id == $video->id)) {
+                        $retirado = true;
+                    } else {
+                        $ultimosVideosSinActual[] = $videoAct;
+                    }
+                }
+                $ultimosVideos = $ultimosVideosSinActual;
+            }
+
+            //Junta los 2 arrays de vídeos recomendados
+            $videosRecomendados = [];
+            foreach ($videosConEtiquetaComun as $videoAct) {
+                $videosRecomendados[] = $videoAct;
+            }
+            foreach ($ultimosVideos as $videoAct) {
+                $videosRecomendados[] = $videoAct;
+            }
+
+            //Añade el creador de cada vídeo
+            $videosRecConNombre = [];
+            foreach ($videosRecomendados as $videoRec) {
+                $creador = User::find($videoRec->creator_id);
+                $videoRec->creatorUsername = $creador->username;
+                $videosRecConNombre[] = $videoRec;
+            }
+            $datos += [
+                'videosRecomendados' => $videosRecConNombre
+            ];
         }
-        $datos += [
-            'videosRecomendados' => $videosRecConNombre
-        ];
 
         return view('video', $datos);
     }
@@ -341,7 +380,8 @@ class contentController extends Controller
     /**
      * Añade un comentario
      */
-    public function commentVideo(Request $req) {
+    public function commentVideo(Request $req)
+    {
         $datos = [];
         $usuarioIniciado = $this->comprobarLogin();
         if ($usuarioIniciado) {
@@ -535,6 +575,16 @@ class contentController extends Controller
                 DB::delete('DELETE FROM video_tag WHERE video_id = ?', [$video->id]);
 
                 $video->delete();
+
+                //Si lo ha eliminado un administrador manda una notificación
+                if ($usuarioIniciado->rol == 1) {
+                    $notificacion = New Notification();
+                    $notificacion->user_id = User::find($video->creator_id)->id;
+                    $notificacion->title = 'Vídeo eliminado';
+                    $notificacion->content = 'Tu vídeo "' . $video->title . '" ha sido eliminado por un administrador.';
+                    $notificacion->save();
+                }
+
                 return redirect(url('user/' . $usuarioIniciado->username));
             } else {
                 return redirect(url('/'));
@@ -683,7 +733,19 @@ class contentController extends Controller
     private function comprobarLogin()
     {
         if (session()->has('usuarioIniciado')) {
-            return session()->get('usuarioIniciado');
+            $usuario = session()->get('usuarioIniciado');
+            $notificaciones = Notification::where('user_id','=',$usuario->id)->get();
+            $usuario->notificaciones = $notificaciones;
+
+            //Comprueba si tiene notificaciones sin leer
+            $notifSinLeer = Notification::where('user_id','=',$usuario->id)->where('leido','=',0)->get();
+            if (sizeof($notifSinLeer) > 0) {
+                $usuario->tieneNotifSinLeer = true;
+            } else {
+                $usuario->tieneNotifSinLeer = false;
+            }
+
+            return $usuario;
         } else {
             return null;
         }

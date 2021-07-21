@@ -16,6 +16,11 @@
     <div class="container mx-auto bg-light">
 
         <div class="row pt-2">
+            <div class="col-12">
+                <p class="h4">
+                    Mis suscripciones
+                </p>
+            </div>
             <?php
             if (isset($channels)) {
                 foreach ($channels as $channel) {

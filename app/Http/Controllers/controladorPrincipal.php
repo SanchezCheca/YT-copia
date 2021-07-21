@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contacto;
+use App\Models\Notification;
 use App\Models\User;
 use App\Models\Video;
 use Illuminate\Http\Request;
@@ -203,11 +204,58 @@ class controladorPrincipal extends Controller
         return view('contacto', $datos);
      }
 
+     /**
+      * Lleva a la vista 'notificaciones'
+      */
+     public function aNotificaciones() {
+        $usuarioIniciado = $this->comprobarLogin();
+        if ($usuarioIniciado) {
+            $datos = [
+                'usuarioIniciado' => $usuarioIniciado
+            ];
+
+            $notificaciones = Notification::where('user_id','=',$usuarioIniciado->id)->get();
+            $notificacionesSinLeer = [];
+            $notificacionesLeidas = [];
+
+            //Todas las notificaciones a "visto"
+            foreach ($notificaciones as $notificacion) {
+                if ($notificacion->leido == 0) {
+                    $notificacionesSinLeer[] = $notificacion;
+                    $notificacion->leido = 1;
+                    $notificacion->save();
+                } else {
+                    $notificacionesLeidas[] = $notificacion;
+                }
+            }
+            $datos += [
+                'notificacionesSinLeer' => $notificacionesSinLeer,
+                'notificacionesLeidas' => $notificacionesLeidas
+            ];
+
+            return view('notificaciones', $datos);
+        } else {
+            return redirect()->back();
+        }
+     }
+
     //------------------MÉTODOS PRIVADOS
     private function comprobarLogin()
     {
         if (session()->has('usuarioIniciado')) {
-            return session()->get('usuarioIniciado');
+            $usuario = session()->get('usuarioIniciado');
+            $notificaciones = Notification::where('user_id','=',$usuario->id)->get();
+            $usuario->notificaciones = $notificaciones;
+
+            //Comprueba si tiene notificaciones sin leer
+            $notifSinLeer = Notification::where('user_id','=',$usuario->id)->where('leido','=',0)->get();
+            if (sizeof($notifSinLeer) > 0) {
+                $usuario->tieneNotifSinLeer = true;
+            } else {
+                $usuario->tieneNotifSinLeer = false;
+            }
+
+            return $usuario;
         } else {
             return null;
         }

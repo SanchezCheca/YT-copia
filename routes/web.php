@@ -17,6 +17,7 @@ Route::get('register', [controladorPrincipal::class, 'aRegister']);
 Route::get('ranking', [controladorPrincipal::class, 'aRanking'])->middleware('controlarRutaActual');
 Route::get('contacto', [controladorPrincipal::class, 'aContacto'])->middleware('controlarRutaActual');
 Route::post('contacto', [controladorPrincipal::class, 'procesarContacto']);
+Route::get('notificaciones', [controladorPrincipal::class, 'aNotificaciones'])->middleware('controlarRutaActual');
 
 //------------CONTENIDO
 Route::get('user/{username}', [contentController::class, 'verCanal'])->middleware('controlarRutaActual');
@@ -44,6 +45,8 @@ Route::post('login', [loginController::class, 'iniciarSesion']);
 Route::get('cerrarSesion', [loginController::class, 'cerrarSesion']);
 
 //-------------ADMINISTRACIÓN
-Route::get('crud', [adminController::class, 'aCrud']);
+Route::get('crud', [adminController::class, 'aCrud'])->middleware('controlarRutaActual');
 Route::post('editUserCRUD', [adminController::class, 'editUserCRUD']);
 Route::get('verContactos', [adminController::class, 'verContactos']);
+Route::get('crearNotificacion', [adminController::class, 'aCrearNotificacion'])->middleware('controlarRutaActual');
+Route::post('crearNotificacion', [adminController::class, 'crearNotificacion']);
