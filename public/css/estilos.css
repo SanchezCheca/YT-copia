@@ -1,0 +1,116 @@
+.perfilRedondo {
+    height: 2em;
+    width: 2em;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.cajaVideo {
+    width: 100%;
+    height: 35vw;
+}
+
+.formateado {
+    white-space: pre-wrap;
+}
+
+
+@media (max-width: 576px) {
+    .botonBuscar {
+        width: 100%;
+    }
+
+    .imagenResultadoBusqueda {
+        width: 100% !important;
+        float: none !important;
+    }
+}
+.videosCanal {
+    width: 100% !important;
+}
+
+/** GENERAL Y FOOTER **/
+body {
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 15vh;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 10vh;
+    background-color: #2C3E50;
+    color: white;
+}
+
+.hayNotificaciones {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.5em;
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 0.2em;
+}
+
+/** PÁGINA PRINCIPAL **/
+.videosPrincipal {
+    width: 100% !important;
+}
+
+/**  VÍDEOS RECOMENDADOS **/
+.tituloVideoRecomendado {
+    font-size: 1.3em !important;
+    max-width: 100%;
+}
+
+.tituloVideoRecomendado a, .canalVideoRecomendado a {
+    color: black;
+    text-decoration: none;
+}
+
+.canalVideoRecomendado {
+    font-size: 0.9em !important;
+    max-width: 100%;
+}
+
+.viewsVideoRecomendado {
+    font-size: 0.7em !important;
+}
+
+/** CANAL **/
+.cabeceraCanal {
+    height: 8vh !important;
+}
+
+.cabeceraCanal img {
+    height: 8vh !important;
+}
+
+.textoMenor {
+    font-size: 0.7em !important;
+}
+
+.textoEstadisticas {
+    font-size: 0.9em !important;
+}
+
+.textoMayor {
+    font-size: 1.2em !important;
+}
+
+/** RESULTADO DE BÚSQUEDA **/
+.perfilResultadoBusqueda {
+    height: 1.5em;
+    width: 1.5em;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.perfilMisSuscripciones {
+    height: 6em;
+    width: 6em;
+    object-fit: cover;
+    border-radius: 50%;
+}
