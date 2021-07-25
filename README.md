@@ -22,6 +22,6 @@
             FFPROBE="/usr/bin/ffprobe"
 -   Ejecuta el comando "composer install"
 -   Ejecuta el comando "php artisan migrate" en el directorio del proyecto.
--   Si no tienes el proyecto desplegado en un servidor, ejecuta "php artisan migrate" para lanzarlo en desarrollo.
+-   Si no tienes el proyecto desplegado en un servidor, ejecuta "php artisan serve" para lanzarlo en desarrollo.
 
 © Daniel Sánchez Checa
